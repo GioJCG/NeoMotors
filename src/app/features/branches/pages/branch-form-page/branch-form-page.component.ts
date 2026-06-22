@@ -1,16 +1,13 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { BaseFormComponent } from '../../../../shared/components/base-form/base-form.component';
 import { BranchesService } from '../../services/branches.service';
 
 @Component({
@@ -18,165 +15,82 @@ import { BranchesService } from '../../services/branches.service';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
     ReactiveFormsModule,
-    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
-    MatIconModule,
     MatCheckboxModule,
     MatDividerModule,
-    MatProgressSpinnerModule,
     MatSnackBarModule,
+    BaseFormComponent,
   ],
   template: `
-    <div class="form-container">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>{{ isEditMode() ? 'Editar Sucursal' : 'Nueva Sucursal' }}</mat-card-title>
-          <mat-card-subtitle>
-            {{ isEditMode() ? 'Actualiza los datos de la sucursal' : 'Registra una nueva sucursal' }}
-          </mat-card-subtitle>
-        </mat-card-header>
+    <app-base-form
+      [title]="(isEditMode() ? 'Editar Sucursal' : 'Nueva Sucursal')"
+      [subtitle]="(isEditMode() ? 'Actualiza los datos de la sucursal' : 'Registra una nueva sucursal')"
+      [formGroup]="branchForm"
+      [saving]="saving()"
+      [error]="error()"
+      [submitLabel]="(isEditMode() ? 'Guardar cambios' : 'Crear sucursal')"
+      [cancelRoute]="'/branches'"
+      [cancelQueryParams]="{ empresaId: empresaId() }"
+      (submit)="onSubmit()"
+    >
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre de la sucursal</mat-label>
+          <input matInput formControlName="nombre" placeholder="Sucursal Centro" />
+          @if (branchForm.get('nombre')?.hasError('required') && branchForm.get('nombre')?.touched) {
+            <mat-error>El nombre es requerido</mat-error>
+          }
+        </mat-form-field>
+      </div>
 
-        <mat-card-content>
-          <form [formGroup]="branchForm" (ngSubmit)="onSubmit()" class="branch-form">
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Nombre de la sucursal</mat-label>
-                <input matInput formControlName="nombre" placeholder="Sucursal Centro" />
-                @if (branchForm.get('nombre')?.hasError('required') && branchForm.get('nombre')?.touched) {
-                  <mat-error>El nombre es requerido</mat-error>
-                }
-              </mat-form-field>
-            </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="direccion" placeholder="Av. Principal #123, Col. Centro" />
+        </mat-form-field>
+      </div>
 
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Dirección</mat-label>
-                <input matInput formControlName="direccion" placeholder="Av. Principal #123, Col. Centro" />
-              </mat-form-field>
-            </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="telefono" placeholder="3312345678" />
+        </mat-form-field>
+      </div>
 
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Teléfono</mat-label>
-                <input matInput formControlName="telefono" placeholder="3312345678" />
-              </mat-form-field>
-            </div>
+      <div class="checkbox-row">
+        <mat-checkbox formControlName="esMatriz">Sucursal Matriz / Principal</mat-checkbox>
+      </div>
 
-            <div class="form-row checkbox-row">
-              <mat-checkbox formControlName="esMatriz">Sucursal Matriz / Principal</mat-checkbox>
-            </div>
+      <mat-divider class="section-divider"></mat-divider>
+      <h3 class="section-title">Georreferenciación (opcional)</h3>
 
-            <mat-divider class="section-divider"></mat-divider>
-            <h3 class="section-title">Georreferenciación (opcional)</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>Latitud</mat-label>
+          <input matInput formControlName="latitud" type="number" placeholder="20.6597" />
+        </mat-form-field>
 
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Latitud</mat-label>
-                <input matInput formControlName="latitud" type="number" placeholder="20.6597" />
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Longitud</mat-label>
-                <input matInput formControlName="longitud" type="number" placeholder="-103.3496" />
-              </mat-form-field>
-            </div>
-
-            @if (error(); as err) {
-              <div class="error-message">
-                <mat-icon color="warn">error</mat-icon>
-                <span>{{ err }}</span>
-              </div>
-            }
-
-            <div class="form-actions">
-              <button mat-stroked-button type="button" [routerLink]="['/branches']" [queryParams]="{ empresaId: empresaId() }">
-                Cancelar
-              </button>
-              <button mat-flat-button color="primary" type="submit" [disabled]="branchForm.invalid || saving()">
-                @if (saving()) {
-                  <mat-spinner diameter="20"></mat-spinner>
-                } @else {
-                  {{ isEditMode() ? 'Guardar cambios' : 'Crear sucursal' }}
-                }
-              </button>
-            </div>
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </div>
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>Longitud</mat-label>
+          <input matInput formControlName="longitud" type="number" placeholder="-103.3496" />
+        </mat-form-field>
+      </div>
+    </app-base-form>
   `,
   styles: `
-    .form-container {
-      max-width: 700px;
-      margin: 24px auto;
-      padding: 0 16px;
-    }
-
-    mat-card-header {
-      margin-bottom: 16px;
-    }
-
-    .branch-form {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
     .form-row {
       display: flex;
       gap: 16px;
       flex-wrap: wrap;
     }
 
-    .full-width {
-      width: 100%;
-    }
-
-    .half-width {
-      flex: 1;
-      min-width: 200px;
-    }
-
-    .checkbox-row {
-      margin: 8px 0;
-    }
-
-    .section-divider {
-      margin: 16px 0;
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 500;
-      color: #666;
-      margin: 0 0 8px;
-    }
-
-    .error-message {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      background: #fce4ec;
-      border-radius: 4px;
-      color: #c62828;
-      font-size: 14px;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .form-actions button mat-spinner {
-      display: inline-block;
-    }
+    .full-width { width: 100%; }
+    .half-width { flex: 1; min-width: 200px; }
+    .checkbox-row { margin: 8px 0; }
+    .section-divider { margin: 16px 0; }
+    .section-title { font-size: 16px; font-weight: 500; color: #666; margin: 0 0 8px; }
   `,
 })
 export class BranchFormPageComponent implements OnInit {
