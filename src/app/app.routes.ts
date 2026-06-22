@@ -12,6 +12,11 @@ export const routes: Routes = [
       import('./features/companies/companies.routes').then((r) => r.companyRoutes),
   },
   {
+    path: 'branches',
+    loadChildren: () =>
+      import('./features/branches/branches.routes').then((r) => r.branchRoutes),
+  },
+  {
     path: '',
     redirectTo: '/auth/login',
     pathMatch: 'full',
