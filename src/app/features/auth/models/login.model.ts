@@ -1,0 +1,19 @@
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: string;
+    user: {
+      id: string;
+      email: string;
+      nombre: string;
+    };
+  };
+  timestamp: string;
+}
