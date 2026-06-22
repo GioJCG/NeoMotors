@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../../../core/services/user.service';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
@@ -227,6 +228,7 @@ export class LoginPageComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
+    private readonly userService: UserService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
   ) {
@@ -269,6 +271,7 @@ export class LoginPageComponent implements OnInit {
       next: (res) => {
         localStorage.setItem('accessToken', res.data.accessToken);
         localStorage.setItem('refreshToken', res.data.refreshToken);
+        this.userService.setFromLogin(res.data.user);
         this.loading.set(false);
         this.router.navigate(['/']);
       },

@@ -13,6 +13,8 @@ export interface LoginResponse {
       id: string;
       email: string;
       nombre: string;
+      roles: string[];
+      permisos: string[];
     };
   };
   timestamp: string;
