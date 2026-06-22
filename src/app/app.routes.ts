@@ -7,14 +7,9 @@ export const routes: Routes = [
       import('./features/auth/auth.routes').then((r) => r.authRoutes),
   },
   {
-    path: 'companies',
+    path: '',
     loadChildren: () =>
-      import('./features/companies/companies.routes').then((r) => r.companyRoutes),
-  },
-  {
-    path: 'branches',
-    loadChildren: () =>
-      import('./features/branches/branches.routes').then((r) => r.branchRoutes),
+      import('./layout/layout.routes').then((r) => r.layoutRoutes),
   },
   {
     path: '',

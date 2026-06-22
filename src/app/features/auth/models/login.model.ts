@@ -13,6 +13,8 @@ export interface LoginResponse {
       id: string;
       email: string;
       nombre: string;
+      companyId: string | null;
+      branchId: string | null;
       roles: string[];
       permisos: string[];
     };

@@ -1,10 +1,8 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '../../core/guards/auth.guard';
 
 export const companyRoutes: Routes = [
   {
     path: '',
-    canActivate: [authGuard],
     children: [
       {
         path: '',
