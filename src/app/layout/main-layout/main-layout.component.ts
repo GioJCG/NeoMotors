@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { UserService } from '../../core/services/user.service';
+import { BrandingService } from '../../core/services/branding.service';
 import { ContextSelectorComponent } from '../context-selector/context-selector.component';
 
 @Component({
@@ -113,7 +114,7 @@ import { ContextSelectorComponent } from '../context-selector/context-selector.c
       left: 0;
       width: 240px;
       height: calc(100vh - 64px);
-      background: #fff;
+      background: var(--app-bg, #fff);
       border-right: 1px solid #e0e0e0;
       z-index: 99;
       overflow-y: auto;
@@ -141,6 +142,7 @@ import { ContextSelectorComponent } from '../context-selector/context-selector.c
 
     .content {
       flex: 1;
+      background: var(--app-bg, #f5f5f5);
       transition: margin-left 0.3s ease;
     }
 
@@ -149,12 +151,21 @@ import { ContextSelectorComponent } from '../context-selector/context-selector.c
     }
   `,
 })
-export class MainLayoutComponent {
+export class MainLayoutComponent implements OnInit {
   readonly userService = inject(UserService);
   private readonly router = inject(Router);
+  private readonly brandingService = inject(BrandingService);
   private menuOpenValue = false;
 
   menuOpen = () => this.menuOpenValue;
+
+  ngOnInit(): void {
+    this.brandingService.init();
+    effect(() => {
+      this.userService.currentCompanyId();
+      this.brandingService.refresh();
+    });
+  }
 
   toggleMenu(): void {
     this.menuOpenValue = !this.menuOpenValue;

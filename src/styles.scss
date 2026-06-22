@@ -1,2 +1,15 @@
+:root {
+  --brand-primary: #1976d2;
+  --brand-secondary: #ff5722;
+  --brand-primary-rgb: 25, 118, 210;
+  --brand-secondary-rgb: 255, 87, 34;
+  --app-bg: #f5f5f5;
+}
+
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background: var(--app-bg); }
+
+[data-theme="dark"] {
+  --app-bg: #121212;
+  color-scheme: dark;
+}
