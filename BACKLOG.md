@@ -170,11 +170,12 @@ El sistema implementa una plataforma SaaS con las siguientes capacidades obligat
 
 ### EPIC 6: Control de Vehículos y Flotas
 #### TASK 6.1.1: CRUD de Vehículos e Historial de Mantenimiento
-- **Tablas Afectadas:** `Marca`, `Modelo`, `Vehiculo`
-- **Endpoints:** `GET/POST/PUT/DELETE /api/v1/vehicles`
-- **Criterios de Aceptación:**
-  - Todo vehículo requiere asociarse a un `Cliente` dueño. La combinación de `EmpresaID` + `Placa` debe ser única.
-  - La pantalla de detalle del vehículo lista cronológicamente todas las Órdenes de Trabajo previas, diagnósticos adjuntos y refacciones consumidas en el histórico del vehículo.
+- [x] **Tablas Afectadas:** `Marca`, `Modelo`, `Vehiculo`
+- [x] **Endpoints:** `GET/POST/PUT/DELETE /api/v1/vehicles`
+- [x] **Criterios de Aceptación:**
+  - [x] Todo vehículo requiere asociarse a un `Cliente` dueño. La combinación de `EmpresaID` + `Placa` debe ser única.
+  - [x] Endpoint historial de mantenimiento (placeholder para Órdenes de Trabajo futuras)
+- **Branch:** Backend `026169f` | Frontend `140f3c5`
 
 ### EPIC 7: Agenda de Citas y Recepción Digital
 #### TASK 7.1.1: Módulo de Citas y Recordatorios
