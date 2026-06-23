@@ -19,6 +19,11 @@ export const layoutRoutes: Routes = [
           import('../features/branches/branches.routes').then((r) => r.branchRoutes),
       },
       {
+        path: 'customers',
+        loadChildren: () =>
+          import('../features/clientes/clientes.routes').then((r) => r.clienteRoutes),
+      },
+      {
         path: '',
         redirectTo: 'companies',
         pathMatch: 'full',
