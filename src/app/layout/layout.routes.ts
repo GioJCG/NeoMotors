@@ -44,6 +44,16 @@ export const layoutRoutes: Routes = [
           import('../features/quotes/quotes.routes').then((r) => r.quoteRoutes),
       },
       {
+        path: 'suppliers',
+        loadChildren: () =>
+          import('../features/suppliers/suppliers.routes').then((r) => r.supplierRoutes),
+      },
+      {
+        path: 'purchase-orders',
+        loadChildren: () =>
+          import('../features/purchase-orders/purchase-orders.routes').then((r) => r.purchaseOrderRoutes),
+      },
+      {
         path: '',
         redirectTo: 'companies',
         pathMatch: 'full',
