@@ -179,11 +179,15 @@ El sistema implementa una plataforma SaaS con las siguientes capacidades obligat
 
 ### EPIC 7: Agenda de Citas y Recepción Digital
 #### TASK 7.1.1: Módulo de Citas y Recordatorios
-- **Tablas Afectadas:** `Cita`
-- **Endpoints:** `GET/POST/PUT/DELETE /api/v1/appointments`
-- **Criterios de Aceptación:**
-  - Permite agendar hora y fecha asociando un cliente y un vehículo, controlando la disponibilidad física de la sucursal de manera visual en un calendario interactivo.
-  - Al guardar la cita, dispara un evento asíncrono para envío automático de correo electrónico de confirmación al cliente.
+- [x] **Tablas Afectadas:** `Cita`
+- [x] **Endpoints:** `GET/POST/PUT/DELETE /api/v1/appointments`
+- [x] **Criterios de Aceptación:**
+  - [x] Calendario interactivo (FullCalendar) con vistas día/semana/mes
+  - [x] Crear cita seleccionando fecha/hora en el calendario
+  - [x] Asociación obligatoria a Cliente + Vehículo
+  - [x] Evento asíncrono `cita.creada` para envío de confirmación por email
+  - [x] Endpoint `GET /appointments/availability` para consultar disponibilidad
+- **Branch:** Backend `cc17db7` | Frontend `4a3189c`
 
 #### TASK 7.1.2: Flujo de Recepción de Vehículos e Inventario de Entrada
 - **Tablas Afectadas:** `RecepcionVehiculo`, `OrdenTrabajo`
