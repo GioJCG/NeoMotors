@@ -9,6 +9,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { UserService } from '../../core/services/user.service';
 import { BrandingService } from '../../core/services/branding.service';
 import { ContextSelectorComponent } from '../context-selector/context-selector.component';
+import { NotificationPanelComponent } from '../../features/notificaciones/components/notification-panel/notification-panel.component';
 
 @Component({
   selector: 'app-main-layout',
@@ -22,6 +23,7 @@ import { ContextSelectorComponent } from '../context-selector/context-selector.c
     MatMenuModule,
     MatDividerModule,
     ContextSelectorComponent,
+    NotificationPanelComponent,
   ],
   template: `
     <div class="layout">
@@ -35,6 +37,10 @@ import { ContextSelectorComponent } from '../context-selector/context-selector.c
         <span class="spacer"></span>
 
         <app-context-selector />
+
+        @if (userService.currentCompanyId()) {
+          <app-notification-panel />
+        }
 
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
           <mat-icon>account_circle</mat-icon>
@@ -107,6 +113,10 @@ import { ContextSelectorComponent } from '../context-selector/context-selector.c
               <a mat-menu-item routerLink="/cash-desk" (click)="toggleMenu()">
                 <mat-icon>point_of_sale</mat-icon>
                 Caja
+              </a>
+              <a mat-menu-item routerLink="/notifications" (click)="toggleMenu()">
+                <mat-icon>notifications</mat-icon>
+                Notificaciones
               </a>
             }
           </nav>
