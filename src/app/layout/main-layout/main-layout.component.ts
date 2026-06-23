@@ -88,6 +88,14 @@ import { ContextSelectorComponent } from '../context-selector/context-selector.c
                 <mat-icon>request_quote</mat-icon>
                 Cotizaciones
               </a>
+              <a mat-menu-item routerLink="/suppliers" (click)="toggleMenu()">
+                <mat-icon>local_shipping</mat-icon>
+                Proveedores
+              </a>
+              <a mat-menu-item routerLink="/purchase-orders" (click)="toggleMenu()">
+                <mat-icon>shopping_cart</mat-icon>
+                Compras
+              </a>
             }
           </nav>
         </div>
