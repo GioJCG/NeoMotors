@@ -3,9 +3,5 @@ export interface VerifyRequest {
 }
 
 export interface VerifyResponse {
-  success: boolean;
-  data: {
-    message: string;
-  };
-  timestamp: string;
+  message: string;
 }

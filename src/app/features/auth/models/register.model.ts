@@ -5,11 +5,7 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  success: boolean;
-  data: {
-    message: string;
-    verificationToken: string;
-    expiresIn: string;
-  };
-  timestamp: string;
+  message: string;
+  verificationToken: string;
+  expiresIn: string;
 }

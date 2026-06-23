@@ -121,24 +121,38 @@ import { environment } from '../../../../../environments/environment';
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 16px;
+      padding: 24px;
       background: #f5f5f5;
+      box-sizing: border-box;
     }
 
     .login-card {
       max-width: 420px;
       width: 100%;
-      padding: 16px;
+      padding: 32px;
+      border-radius: 12px;
     }
 
     .login-card mat-card-header {
-      margin-bottom: 16px;
+      padding: 0 0 8px;
+      margin-bottom: 24px;
+    }
+
+    .login-card mat-card-title {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .login-card mat-card-subtitle {
+      font-size: 14px;
+      color: #666;
     }
 
     .login-form {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 20px;
     }
 
     .full-width {
@@ -146,8 +160,10 @@ import { environment } from '../../../../../environments/environment';
     }
 
     .submit-btn {
-      margin-top: 8px;
+      margin-top: 4px;
       height: 48px;
+      font-size: 16px;
+      border-radius: 6px;
     }
 
     .submit-btn mat-spinner {
@@ -158,16 +174,16 @@ import { environment } from '../../../../../environments/environment';
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 12px;
+      padding: 12px 16px;
       background: #fce4ec;
-      border-radius: 4px;
+      border-radius: 6px;
       color: #c62828;
       font-size: 14px;
     }
 
     .links {
       text-align: center;
-      margin-top: 16px;
+      margin-top: 20px;
     }
 
     .forgot-link {
@@ -175,7 +191,7 @@ import { environment } from '../../../../../environments/environment';
     }
 
     .divider {
-      margin: 20px 0 16px;
+      margin: 24px 0 20px;
     }
 
     .oauth-section {
@@ -185,13 +201,13 @@ import { environment } from '../../../../../environments/environment';
     .oauth-label {
       font-size: 13px;
       color: #666;
-      margin: 0 0 12px;
+      margin: 0 0 16px;
     }
 
     .oauth-buttons {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .oauth-btn {
@@ -200,6 +216,7 @@ import { environment } from '../../../../../environments/environment';
       justify-content: center;
       gap: 8px;
       height: 44px;
+      border-radius: 6px;
     }
 
     .oauth-icon {
@@ -209,7 +226,7 @@ import { environment } from '../../../../../environments/environment';
 
     .register-link {
       text-align: center;
-      margin-top: 16px;
+      margin-top: 20px;
       font-size: 14px;
     }
 
@@ -269,9 +286,9 @@ export class LoginPageComponent implements OnInit {
 
     this.authService.login(this.loginForm.value).subscribe({
       next: (res) => {
-        localStorage.setItem('accessToken', res.data.accessToken);
-        localStorage.setItem('refreshToken', res.data.refreshToken);
-        this.userService.setFromLogin(res.data.user);
+        localStorage.setItem('accessToken', res.accessToken);
+        localStorage.setItem('refreshToken', res.refreshToken);
+        this.userService.setFromLogin(res.user);
         this.loading.set(false);
         this.router.navigate(['/']);
       },
