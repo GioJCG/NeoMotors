@@ -64,6 +64,11 @@ export const layoutRoutes: Routes = [
           import('../features/inventory/inventory.routes').then((r) => r.inventoryRoutes),
       },
       {
+        path: 'cash-desk',
+        loadChildren: () =>
+          import('../features/cash-desk/cash-desk.routes').then((r) => r.cashDeskRoutes),
+      },
+      {
         path: '',
         redirectTo: 'companies',
         pathMatch: 'full',
