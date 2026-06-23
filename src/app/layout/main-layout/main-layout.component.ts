@@ -118,6 +118,10 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
                 <mat-icon>notifications</mat-icon>
                 Notificaciones
               </a>
+              <a mat-menu-item routerLink="/audit-logs" (click)="toggleMenu()">
+                <mat-icon>receipt_long</mat-icon>
+                Auditoría
+              </a>
             }
           </nav>
         </div>
