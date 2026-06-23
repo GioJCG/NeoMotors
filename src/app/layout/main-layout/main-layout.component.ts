@@ -84,6 +84,10 @@ import { ContextSelectorComponent } from '../context-selector/context-selector.c
                 <mat-icon>build</mat-icon>
                 Órdenes
               </a>
+              <a mat-menu-item routerLink="/quotes" (click)="toggleMenu()">
+                <mat-icon>request_quote</mat-icon>
+                Cotizaciones
+              </a>
             }
           </nav>
         </div>
