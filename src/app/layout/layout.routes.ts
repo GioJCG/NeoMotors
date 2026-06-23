@@ -34,6 +34,11 @@ export const layoutRoutes: Routes = [
           import('../features/citas/citas.routes').then((r) => r.citaRoutes),
       },
       {
+        path: 'work-orders',
+        loadChildren: () =>
+          import('../features/work-orders/work-orders.routes').then((r) => r.workOrderRoutes),
+      },
+      {
         path: '',
         redirectTo: 'companies',
         pathMatch: 'full',
