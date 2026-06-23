@@ -69,6 +69,11 @@ export const layoutRoutes: Routes = [
           import('../features/cash-desk/cash-desk.routes').then((r) => r.cashDeskRoutes),
       },
       {
+        path: 'notifications',
+        loadChildren: () =>
+          import('../features/notificaciones/notificaciones.routes').then((r) => r.notificacionesRoutes),
+      },
+      {
         path: '',
         redirectTo: 'companies',
         pathMatch: 'full',
