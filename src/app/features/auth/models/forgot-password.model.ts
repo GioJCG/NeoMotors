@@ -3,11 +3,7 @@ export interface ForgotPasswordRequest {
 }
 
 export interface ForgotPasswordResponse {
-  success: boolean;
-  data: {
-    message: string;
-    resetToken?: string;
-    expiresIn?: string;
-  };
-  timestamp: string;
+  message: string;
+  resetToken?: string;
+  expiresIn?: string;
 }

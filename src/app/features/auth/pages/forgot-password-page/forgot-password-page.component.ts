@@ -185,9 +185,9 @@ export class ForgotPasswordPageComponent {
     this.authService.forgotPassword(this.forgotForm.value).subscribe({
       next: (res) => {
         this.emailSent.set(true);
-        this.successMessage.set(res.data.message);
-        if (res.data.resetToken) {
-          this.resetToken.set(res.data.resetToken);
+        this.successMessage.set(res.message);
+        if (res.resetToken) {
+          this.resetToken.set(res.resetToken);
         }
         this.loading.set(false);
       },

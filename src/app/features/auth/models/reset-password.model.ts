@@ -4,9 +4,5 @@ export interface ResetPasswordRequest {
 }
 
 export interface ResetPasswordResponse {
-  success: boolean;
-  data: {
-    message: string;
-  };
-  timestamp: string;
+  message: string;
 }
