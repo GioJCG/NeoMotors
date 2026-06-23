@@ -126,6 +126,10 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
                 <mat-icon>receipt_long</mat-icon>
                 Auditoría
               </a>
+              <a mat-menu-item routerLink="/fiscal/csd" (click)="toggleMenu()">
+                <mat-icon>verified</mat-icon>
+                CSD
+              </a>
             }
           </nav>
         </div>
