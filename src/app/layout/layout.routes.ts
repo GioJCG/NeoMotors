@@ -29,6 +29,11 @@ export const layoutRoutes: Routes = [
           import('../features/vehiculos/vehiculos.routes').then((r) => r.vehiculoRoutes),
       },
       {
+        path: 'appointments',
+        loadChildren: () =>
+          import('../features/citas/citas.routes').then((r) => r.citaRoutes),
+      },
+      {
         path: '',
         redirectTo: 'companies',
         pathMatch: 'full',
