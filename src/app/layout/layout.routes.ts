@@ -74,6 +74,11 @@ export const layoutRoutes: Routes = [
           import('../features/notificaciones/notificaciones.routes').then((r) => r.notificacionesRoutes),
       },
       {
+        path: 'audit-logs',
+        loadChildren: () =>
+          import('../features/audit-logs/audit-logs.routes').then((r) => r.auditLogRoutes),
+      },
+      {
         path: '',
         redirectTo: 'companies',
         pathMatch: 'full',
