@@ -54,3 +54,35 @@ export interface CreateReceptionRequest {
   daniosCarroceria?: string;
   fotos?: string[];
 }
+
+export interface Diagnostico {
+  id: string;
+  ordenTrabajoId: string;
+  tecnicoId: string;
+  sintomas?: string | null;
+  fallasEncontradas?: string | null;
+  desgastesPiezas?: string | null;
+  conclusion?: string | null;
+  createdAt: string;
+  createdBy?: string | null;
+  tecnico?: { id: string; nombre: string; email: string };
+}
+
+export interface CreateDiagnosticoRequest {
+  sintomas?: string;
+  fallasEncontradas?: string;
+  desgastesPiezas?: string;
+  conclusion?: string;
+}
+
+export interface TiempoTecnico {
+  id: string;
+  ordenTrabajoId: string;
+  tecnicoId: string;
+  horaInicio: string;
+  horaFin?: string | null;
+  estado: string;
+  createdAt: string;
+  createdBy?: string | null;
+  tecnico?: { id: string; nombre: string; email: string };
+}
