@@ -269,19 +269,21 @@ El sistema implementa una plataforma SaaS con las siguientes capacidades obligat
   - Valida mediante código en backend la vigencia y correspondencia del RFC antes de guardar los archivos.
 
 #### TASK 13.1.2: Generación de Estructura XML, Timbrado de CFDI y Descargas
-- **Tablas Afectadas:** `FacturaFiscal`, `FacturaFiscalDetalle`
-- **Endpoints:** `POST /api/v1/billing/issue`, `GET /api/v1/billing/download/{id}/{format}`
-- **Criterios de Aceptación:**
-  - A partir de una orden de trabajo completamente pagada, genera la estructura jerárquica XML requerida por el anexo 20 para CFDI 4.0 mapeando de forma correcta los conceptos a los códigos del catálogo `SatProductoServicio` y `SatUnidadMedida`.
-  - Realiza de manera exitosa la conexión por API con el Proveedor Autorizado de Certificación (PAC), procesando la firma digital y el timbrado. Almacena localmente el UUID retornado y el XML timbrado final.
-  - Implementa un manejador de errores detallado que registra la trazabilidad completa en caso de rechazo del PAC para permitir correcciones inmediatas.
-  - Generación dinámica de la representación impresa en formato **PDF** de la factura que incluye de forma obligatoria el desglose fiscal tradicional, cadenas de sellos digitales y el código QR fiscal oficial apuntando a la verificación del SAT.
+- [x] **Tablas Afectadas:** `FacturaFiscal`, `FacturaFiscalDetalle`
+- [x] **Endpoints:** `POST /api/v1/billing/issue`, `GET /api/v1/billing`, `GET /api/v1/billing/{id}/download?format=xml|pdf`
+- [x] **Criterios de Aceptación:**
+  - [x] A partir de una orden de trabajo completamente pagada, genera la estructura jerárquica XML requerida por el anexo 20 para CFDI 4.0 mapeando de forma correcta los conceptos a los códigos del catálogo `SatProductoServicio` y `SatUnidadMedida`.
+  - [x] Realiza de manera exitosa la conexión por API con el Proveedor Autorizado de Certificación (PAC), procesando la firma digital y el timbrado. Almacena localmente el UUID retornado y el XML timbrado final.
+  - [x] Implementa un manejador de errores detallado que registra la trazabilidad completa en caso de rechazo del PAC para permitir correcciones inmediatas.
+  - [x] Generación dinámica de la representación impresa en formato **PDF** de la factura que incluye de forma obligatoria el desglose fiscal tradicional, cadenas de sellos digitales y el código QR fiscal oficial apuntando a la verificación del SAT.
+- **Branch:** Backend `current` | Frontend `current`
 
 ### EPIC 14: Consola de Administración Global (SuperUsuario)
 #### TASK 14.1.1: Panel Maestro de Monitoreo de Tenants SaaS
-- **Endpoints:** Acceso restringido exclusivo a `/api/v1/superadmin/*`
-- **Criterios de Aceptación:**
-  - Interfaz exclusiva para el rol `SuperUsuario` que permite listar la totalidad de las empresas registradas en la infraestructura, suspender o activar empresas (Soft-lock de acceso total), visualizar estadísticas agregadas globales de transacciones de timbrado y auditar los logs del sistema sin restricción de inquilino.
+- [x] **Endpoints:** Acceso restringido exclusivo a `/api/v1/superadmin/*`
+- [x] **Criterios de Aceptación:**
+  - [x] Interfaz exclusiva para el rol `SuperUsuario` que permite listar la totalidad de las empresas registradas en la infraestructura, suspender o activar empresas (Soft-lock de acceso total), visualizar estadísticas agregadas globales de transacciones de timbrado y auditar los logs del sistema sin restricción de inquilino.
+- **Branch:** Backend `5a444d5` | Frontend `feature/14.1.1-superadmin-ui`
 
 ---
 
