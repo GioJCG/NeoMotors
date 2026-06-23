@@ -15,8 +15,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export interface BaseColumnDef {
   key: string;
   label: string;
-  type?: 'text' | 'chip' | 'checkbox';
+  type?: 'text' | 'chip' | 'checkbox' | 'object';
   chipColor?: (value: string, row: any) => { bg: string; color: string };
+  displayKey?: string;
   width?: string;
 }
 
@@ -86,6 +87,8 @@ export interface BaseColumnDef {
                       </mat-chip>
                     } @else if (col.type === 'checkbox') {
                       <mat-checkbox [checked]="row[col.key]" disabled></mat-checkbox>
+                    } @else if (col.type === 'object') {
+                      {{ col.displayKey ? row[col.key]?.[col.displayKey] : row[col.key] }}
                     } @else {
                       {{ row[col.key] }}
                     }

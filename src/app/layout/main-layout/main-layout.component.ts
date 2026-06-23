@@ -68,6 +68,10 @@ import { ContextSelectorComponent } from '../context-selector/context-selector.c
                 <mat-icon>people</mat-icon>
                 Clientes
               </a>
+              <a mat-menu-item routerLink="/vehicles" (click)="toggleMenu()">
+                <mat-icon>directions_car</mat-icon>
+                Vehículos
+              </a>
             }
           </nav>
         </div>
