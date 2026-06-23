@@ -66,6 +66,10 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
               Empresas
             </a>
             @if (userService.currentCompanyId()) {
+              <a mat-menu-item routerLink="/dashboard" (click)="toggleMenu()">
+                <mat-icon>dashboard</mat-icon>
+                Dashboard
+              </a>
               <a mat-menu-item [routerLink]="['/branches']" [queryParams]="{ empresaId: userService.currentCompanyId() }" (click)="toggleMenu()">
                 <mat-icon>store</mat-icon>
                 Sucursales
