@@ -214,8 +214,8 @@ export class RegisterPageComponent {
 
     this.authService.register(this.registerForm.value).subscribe({
       next: (res) => {
-        this.verificationToken.set(res.data.verificationToken);
-        this.expiresIn.set(res.data.expiresIn);
+        this.verificationToken.set(res.verificationToken);
+        this.expiresIn.set(res.expiresIn);
         this.loading.set(false);
       },
       error: (err) => {
