@@ -221,6 +221,9 @@ export class RegisterPageComponent {
         } else {
           this.router.navigate(['/auth/verification-success']);
         }
+      next: (res) => {
+        this.verificationToken.set(res.verificationToken);
+        this.expiresIn.set(res.expiresIn);
         this.loading.set(false);
       },
       error: (err) => {
