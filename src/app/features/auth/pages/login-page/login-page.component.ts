@@ -269,6 +269,7 @@ export class LoginPageComponent implements OnInit {
       if (accessToken && refreshToken) {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
+        this.userService.refresh();
         this.router.navigate(['/']);
       }
     });
@@ -288,9 +289,13 @@ export class LoginPageComponent implements OnInit {
       next: (res) => {
         localStorage.setItem('accessToken', res.accessToken);
         localStorage.setItem('refreshToken', res.refreshToken);
-        this.userService.setFromLogin(res.user);
+        this.userService.setFromLogin(res.user, res.requiresCompany);
         this.loading.set(false);
-        this.router.navigate(['/']);
+        if (res.requiresCompany) {
+          this.router.navigate(['/onboarding/company']);
+        } else {
+          this.router.navigate(['/']);
+        }
       },
       error: (err) => {
         this.error.set(err.error?.message || 'Error al iniciar sesión');

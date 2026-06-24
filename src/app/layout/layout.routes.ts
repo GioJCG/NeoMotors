@@ -1,11 +1,19 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../core/guards/auth.guard';
-import { MainLayoutComponent } from './main-layout/main-layout.component';
 
 export const layoutRoutes: Routes = [
   {
+    path: 'onboarding/company',
+    loadComponent: () =>
+      import('../features/onboarding/pages/create-company/create-company-page.component').then(
+        (c) => c.CreateCompanyPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: '',
-    component: MainLayoutComponent,
+    loadComponent: () =>
+      import('./main-layout/main-layout.component').then((c) => c.MainLayoutComponent),
     canActivate: [authGuard],
     children: [
       {
@@ -82,6 +90,11 @@ export const layoutRoutes: Routes = [
         path: 'dashboard',
         loadChildren: () =>
           import('../features/dashboard/dashboard.routes').then((r) => r.dashboardRoutes),
+      },
+      {
+        path: 'users',
+        loadChildren: () =>
+          import('../features/usuarios/usuarios.routes').then((r) => r.usuarioRoutes),
       },
       {
         path: 'fiscal',

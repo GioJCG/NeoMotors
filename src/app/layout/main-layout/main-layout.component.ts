@@ -32,7 +32,7 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
           <mat-icon>menu</mat-icon>
         </button>
 
-        <span class="brand" routerLink="/companies">neoMotors</span>
+        <span class="brand" routerLink="/">neoMotors</span>
 
         <span class="spacer"></span>
 
@@ -61,10 +61,18 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
       @if (menuOpen()) {
         <div class="sidenav">
           <nav class="nav-list">
-            <a mat-menu-item routerLink="/companies" (click)="toggleMenu()">
-              <mat-icon>business</mat-icon>
-              Empresas
-            </a>
+            @if (userService.hasRole('SuperUsuario')) {
+              <a mat-menu-item routerLink="/companies" (click)="toggleMenu()">
+                <mat-icon>business</mat-icon>
+                Empresas
+              </a>
+            }
+            @if (userService.currentCompanyId() && userService.hasAnyRole(['AdministradorEmpresa', 'SuperUsuario'])) {
+              <a mat-menu-item routerLink="/users" (click)="toggleMenu()">
+                <mat-icon>group</mat-icon>
+                Usuarios
+              </a>
+            }
             @if (userService.currentCompanyId()) {
               <a mat-menu-item routerLink="/dashboard" (click)="toggleMenu()">
                 <mat-icon>dashboard</mat-icon>

@@ -6,6 +6,7 @@ export interface RegisterRequest {
 
 export interface RegisterResponse {
   message: string;
-  verificationToken: string;
-  expiresIn: string;
+  requiresCompany?: boolean;
+  verificationToken?: string;
+  expiresIn?: string;
 }

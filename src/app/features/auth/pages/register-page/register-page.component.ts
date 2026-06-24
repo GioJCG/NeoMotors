@@ -214,17 +214,14 @@ export class RegisterPageComponent {
     this.error.set(null);
 
     this.authService.register(this.registerForm.value).subscribe({
-      next: (res: any) => {
+      next: (res) => {
+        this.loading.set(false);
         if (res.verificationToken) {
           this.verificationToken.set(res.verificationToken);
-          this.expiresIn.set(res.expiresIn);
+          if (res.expiresIn) this.expiresIn.set(res.expiresIn);
         } else {
           this.router.navigate(['/auth/verification-success']);
         }
-      next: (res) => {
-        this.verificationToken.set(res.verificationToken);
-        this.expiresIn.set(res.expiresIn);
-        this.loading.set(false);
       },
       error: (err) => {
         this.error.set(err.error?.message || 'Error al registrar usuario');
