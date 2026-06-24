@@ -10,6 +10,7 @@ export class UserService {
   private readonly availableBranchesSignal = signal<BranchItem[]>([]);
   private readonly currentCompanyIdSignal = signal<string | null>(null);
   private readonly currentBranchIdSignal = signal<string | null>(null);
+  private readonly requiresCompanySignal = signal<boolean>(false);
 
   readonly user = this.userSignal.asReadonly();
   readonly roles = this.rolesSignal.asReadonly();
@@ -18,6 +19,7 @@ export class UserService {
   readonly availableBranches = this.availableBranchesSignal.asReadonly();
   readonly currentCompanyId = this.currentCompanyIdSignal.asReadonly();
   readonly currentBranchId = this.currentBranchIdSignal.asReadonly();
+  readonly requiresCompany = this.requiresCompanySignal.asReadonly();
 
   readonly isAuthenticated = computed(() => this.userSignal() !== null);
 
@@ -55,6 +57,9 @@ export class UserService {
 
       const storedCompanyId = localStorage.getItem('currentCompanyId') || payload.companyId || null;
       const storedBranchId = localStorage.getItem('currentBranchId') || payload.branchId || null;
+      const roles = payload.roles || [];
+      const isAdmin = roles.includes('AdministradorEmpresa');
+      const needsCompany = isAdmin && !storedCompanyId;
 
       this.userSignal.set({
         id: payload.sub,
@@ -62,24 +67,26 @@ export class UserService {
         nombre: null,
         companyId: storedCompanyId,
         branchId: storedBranchId,
-        roles: payload.roles || [],
+        roles,
         permisos: payload.permisos || [],
       });
-      this.rolesSignal.set(payload.roles || []);
+      this.rolesSignal.set(roles);
       this.permisosSignal.set(payload.permisos || []);
       this.currentCompanyIdSignal.set(storedCompanyId);
       this.currentBranchIdSignal.set(storedBranchId);
+      this.requiresCompanySignal.set(needsCompany);
     } catch {
       this.clear();
     }
   }
 
-  setFromLogin(user: User): void {
+  setFromLogin(user: User, requiresCompany?: boolean): void {
     this.userSignal.set(user);
     this.rolesSignal.set(user.roles);
     this.permisosSignal.set(user.permisos);
     this.currentCompanyIdSignal.set(user.companyId);
     this.currentBranchIdSignal.set(user.branchId);
+    this.requiresCompanySignal.set(requiresCompany ?? false);
     if (user.companyId) localStorage.setItem('currentCompanyId', user.companyId);
     if (user.branchId) localStorage.setItem('currentBranchId', user.branchId);
   }
@@ -94,6 +101,7 @@ export class UserService {
 
   setCurrentCompany(companyId: string, companyName?: string): void {
     this.currentCompanyIdSignal.set(companyId);
+    this.requiresCompanySignal.set(false);
     localStorage.setItem('currentCompanyId', companyId);
     const current = this.userSignal();
     if (current) {
@@ -125,6 +133,9 @@ export class UserService {
     this.availableBranchesSignal.set([]);
     this.currentCompanyIdSignal.set(null);
     this.currentBranchIdSignal.set(null);
+    this.requiresCompanySignal.set(false);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('currentCompanyId');
     localStorage.removeItem('currentBranchId');
   }

@@ -7,6 +7,7 @@ export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
   expiresIn: string;
+  requiresCompany?: boolean;
   user: {
     id: string;
     email: string;

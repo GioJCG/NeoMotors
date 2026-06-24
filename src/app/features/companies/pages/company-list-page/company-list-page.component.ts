@@ -39,16 +39,7 @@ import { RolDirective } from '../../../../core/directives/rol.directive';
       (searchTermChange)="onSearch($event)"
       (pageChange)="onPageChange($event)"
     >
-      <button
-        toolbar-actions
-        *appRol="['SuperUsuario']"
-        mat-flat-button
-        color="primary"
-        routerLink="/companies/new"
-      >
-        <mat-icon>add</mat-icon>
-        Nueva Empresa
-      </button>
+
 
       <ng-template #actions let-company>
         <button mat-icon-button color="primary" [routerLink]="['/companies', company.id, 'edit']" matTooltip="Editar">

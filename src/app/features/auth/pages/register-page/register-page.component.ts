@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-register-page',
@@ -198,6 +199,7 @@ export class RegisterPageComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
+    private readonly userService: UserService,
     private readonly router: Router,
   ) {
     this.registerForm = this.fb.group({
@@ -215,16 +217,8 @@ export class RegisterPageComponent {
 
     this.authService.register(this.registerForm.value).subscribe({
       next: (res: any) => {
-        if (res.verificationToken) {
-          this.verificationToken.set(res.verificationToken);
-          this.expiresIn.set(res.expiresIn);
-        } else {
-          this.router.navigate(['/auth/verification-success']);
-        }
-      next: (res) => {
-        this.verificationToken.set(res.verificationToken);
-        this.expiresIn.set(res.expiresIn);
         this.loading.set(false);
+        this.router.navigate(['/auth/verification-success']);
       },
       error: (err) => {
         this.error.set(err.error?.message || 'Error al registrar usuario');
