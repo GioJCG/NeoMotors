@@ -10,8 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatDividerModule } from '@angular/material/divider';
 import { CompaniesService } from '../../../companies/services/companies.service';
 import { UserService } from '../../../../core/services/user.service';
+import { Company } from '../../../companies/models/company.model';
 
 @Component({
   selector: 'app-create-company-page',
@@ -27,6 +29,7 @@ import { UserService } from '../../../../core/services/user.service';
     MatIconModule,
     MatProgressSpinnerModule,
     MatStepperModule,
+    MatDividerModule,
   ],
   template: `
     <div class="onboarding-container">
@@ -104,6 +107,34 @@ import { UserService } from '../../../../core/services/user.service';
                   </mat-form-field>
                 </div>
 
+                <mat-divider class="section-divider"></mat-divider>
+                <h3 class="section-title">Personalización (opcional)</h3>
+
+                <div class="form-grid">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>URL del Logo</mat-label>
+                    <input matInput formControlName="logoUrl" placeholder="https://ejemplo.com/logo.png" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Color Primario</mat-label>
+                    <input matInput formControlName="colorPrimario" placeholder="#1976D2" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Color Secundario</mat-label>
+                    <input matInput formControlName="colorSecundario" placeholder="#FF5722" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Tema</mat-label>
+                    <mat-select formControlName="tema">
+                      <mat-option value="light">Claro</mat-option>
+                      <mat-option value="dark">Oscuro</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
                 <div class="step-actions">
                   <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="companyForm.invalid || loading()">
                     @if (loading()) {
@@ -172,6 +203,9 @@ import { UserService } from '../../../../core/services/user.service';
       grid-column: 1 / -1;
     }
 
+    .section-divider { margin: 16px 0; }
+    .section-title { font-size: 16px; font-weight: 500; color: #666; margin: 0 0 8px; }
+
     .step-actions {
       display: flex;
       justify-content: flex-end;
@@ -221,6 +255,10 @@ export class CreateCompanyPageComponent {
       razonSocial: ['', Validators.required],
       codigoPostalFiscal: ['', [Validators.required, Validators.maxLength(5)]],
       regimenFiscal: ['', Validators.required],
+      logoUrl: [''],
+      colorPrimario: [''],
+      colorSecundario: [''],
+      tema: [''],
     });
   }
 
@@ -231,9 +269,12 @@ export class CreateCompanyPageComponent {
     this.error.set(null);
 
     this.companiesService.create(this.companyForm.value).subscribe({
-      next: () => {
+      next: (res: any) => {
         this.loading.set(false);
-        this.userService.refresh();
+        const companyId = res?.id || res?.data?.id;
+        if (companyId) {
+          this.userService.setCurrentCompany(companyId, res.nombre);
+        }
         this.router.navigate(['/']);
       },
       error: (err) => {
