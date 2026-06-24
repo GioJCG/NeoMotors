@@ -23,6 +23,13 @@ export const authRoutes: Routes = [
       ),
   },
   {
+    path: 'verification-success',
+    loadComponent: () =>
+      import(
+        './pages/verification-success-page/verification-success-page.component'
+      ).then((c) => c.VerificationSuccessPageComponent),
+  },
+  {
     path: 'forgot-password',
     loadComponent: () =>
       import('./pages/forgot-password-page/forgot-password-page.component').then(

@@ -198,6 +198,7 @@ export class RegisterPageComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
+    private readonly router: Router,
   ) {
     this.registerForm = this.fb.group({
       nombre: [''],
@@ -213,9 +214,13 @@ export class RegisterPageComponent {
     this.error.set(null);
 
     this.authService.register(this.registerForm.value).subscribe({
-      next: (res) => {
-        this.verificationToken.set(res.data.verificationToken);
-        this.expiresIn.set(res.data.expiresIn);
+      next: (res: any) => {
+        if (res.verificationToken) {
+          this.verificationToken.set(res.verificationToken);
+          this.expiresIn.set(res.expiresIn);
+        } else {
+          this.router.navigate(['/auth/verification-success']);
+        }
         this.loading.set(false);
       },
       error: (err) => {

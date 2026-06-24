@@ -225,12 +225,15 @@ export class MainLayoutComponent implements OnInit {
 
   menuOpen = () => this.menuOpenValue;
 
-  ngOnInit(): void {
-    this.brandingService.init();
+  constructor() {
     effect(() => {
       this.userService.currentCompanyId();
       this.brandingService.refresh();
     });
+  }
+
+  ngOnInit(): void {
+    this.brandingService.init();
   }
 
   toggleMenu(): void {
