@@ -20,6 +20,7 @@ html {
   --brand-primary-rgb: 25, 118, 210;
   --brand-secondary-rgb: 255, 87, 34;
   --app-bg: #f5f5f5;
+  --brand-contrast: #fff;
 }
 
 html, body { height: 100%; }
@@ -28,4 +29,37 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background:
 [data-theme="dark"] {
   --app-bg: #121212;
   color-scheme: dark;
+}
+
+/* ── Branded table headers ── */
+.mat-mdc-header-row {
+  background: var(--brand-primary, #1976d2);
+}
+
+.mat-mdc-header-cell {
+  color: var(--brand-contrast, #fff) !important;
+  font-weight: 600;
+}
+
+/* ── Branded paginator ── */
+.mat-mdc-paginator {
+  --mat-paginator-enabled-icon-color: var(--brand-primary, #1976d2);
+  --mat-paginator-hover-icon-color: var(--brand-secondary, #ff5722);
+  --mat-paginator-container-background-color: transparent;
+}
+
+/* ── Branded chips (MAT M3) ── */
+.mat-mdc-chip {
+  --mdc-chip-elevated-container-color: rgba(var(--brand-primary-rgb, 25, 118, 210), 0.12);
+  --mdc-chip-label-text-color: var(--brand-primary, #1976d2);
+}
+
+/* ── Branded card headers / icon avatars ── */
+.mat-mdc-card .mat-mdc-card-header .mat-icon {
+  color: var(--brand-primary, #1976d2);
+}
+
+/* ── Dashboard bar-fill uses secondary brand color ── */
+.bar-fill {
+  background: var(--brand-secondary, #ff5722) !important;
 }
