@@ -164,7 +164,7 @@ export class VehiculoFormPageComponent implements OnInit {
   }
 
   private loadMarcas(): void {
-    this.vehiculosService.findAllMarcas().subscribe({
+    this.vehiculosService.getBrands().subscribe({
       next: (res) => this.marcas.set(res ?? []),
       error: (err) => {
         console.error('Error al cargar marcas:', err);
@@ -177,7 +177,7 @@ export class VehiculoFormPageComponent implements OnInit {
     this.vehiculoForm.patchValue({ modeloId: '' });
     this.modelos.set([]);
     if (marcaId) {
-      this.vehiculosService.findModelosByMarca(marcaId).subscribe({
+      this.vehiculosService.getModelsByBrand(marcaId).subscribe({
         next: (res) => this.modelos.set(res ?? []),
         error: (err) => {
           console.error('Error al cargar modelos:', err);
