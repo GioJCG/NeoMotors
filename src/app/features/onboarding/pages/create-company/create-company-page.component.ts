@@ -269,9 +269,9 @@ export class CreateCompanyPageComponent {
     this.error.set(null);
 
     this.companiesService.create(this.companyForm.value).subscribe({
-      next: (res: any) => {
+      next: (res) => {
         this.loading.set(false);
-        const companyId = res?.id || res?.data?.id;
+        const companyId = res.id;
         if (companyId) {
           this.userService.setCurrentCompany(companyId, res.nombre);
         }

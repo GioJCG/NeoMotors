@@ -166,7 +166,7 @@ export class CompanyFormPageComponent implements OnInit {
   private loadCompany(id: string): void {
     this.companiesService.findById(id).subscribe({
       next: (res) => {
-        const c = res.data;
+        const c = res;
         this.companyForm.patchValue({
           nombre: c.nombre,
           rfc: c.rfc,

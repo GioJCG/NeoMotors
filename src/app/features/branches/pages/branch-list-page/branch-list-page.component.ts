@@ -97,6 +97,7 @@ export class BranchListPageComponent implements OnInit {
   ];
 
   readonly branches = signal<Branch[]>([]);
+  private readonly allBranches = signal<Branch[]>([]);
   readonly loading = signal(false);
   readonly searchTerm = signal('');
   readonly pageSize = 10;
@@ -116,7 +117,9 @@ export class BranchListPageComponent implements OnInit {
     this.loading.set(true);
     this.branchesService.findAll(this.empresaId()).subscribe({
       next: (res) => {
-        this.branches.set(res.data);
+        const data = res ?? [];
+        this.allBranches.set(data);
+        this.branches.set(data);
         this.loading.set(false);
       },
       error: () => {
@@ -128,14 +131,17 @@ export class BranchListPageComponent implements OnInit {
 
   onSearch(term: string): void {
     this.searchTerm.set(term);
-    this.branches.set(
-      this.branches().filter(
-        (b) =>
-          !term ||
-          b.nombre.toLowerCase().includes(term.toLowerCase()) ||
-          (b.direccion && b.direccion.toLowerCase().includes(term.toLowerCase())),
-      ),
-    );
+    if (!term) {
+      this.branches.set(this.allBranches());
+    } else {
+      this.branches.set(
+        this.allBranches().filter(
+          (b) =>
+            b.nombre.toLowerCase().includes(term.toLowerCase()) ||
+            (b.direccion && b.direccion.toLowerCase().includes(term.toLowerCase())),
+        ),
+      );
+    }
   }
 
   onPageChange(_event: any): void {

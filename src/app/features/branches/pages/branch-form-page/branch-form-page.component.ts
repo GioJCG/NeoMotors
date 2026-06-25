@@ -131,7 +131,7 @@ export class BranchFormPageComponent implements OnInit {
   private loadBranch(id: string): void {
     this.branchesService.findById(id).subscribe({
       next: (res) => {
-        const b = res.data;
+        const b = res;
         this.empresaId.set(b.empresaId);
         this.branchForm.patchValue({
           nombre: b.nombre,
@@ -150,7 +150,7 @@ export class BranchFormPageComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.branchForm.invalid) return;
+    if (this.branchForm.invalid || this.saving()) return;
 
     this.saving.set(true);
     this.error.set(null);
