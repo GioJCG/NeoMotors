@@ -151,13 +151,13 @@ export class CitaDialogComponent implements OnInit {
 
   private loadClientes(): void {
     this.clientesService.findAll().subscribe({
-      next: (res) => this.clientes.set(res.data.filter((c) => c.estado === 'ACTIVO')),
+      next: (res) => this.clientes.set((res ?? []).filter((c) => c.estado === 'ACTIVO')),
     });
   }
 
   private loadVehiculos(): void {
     this.vehiculosService.findAll().subscribe({
-      next: (res) => this.vehiculos.set(res.data.filter((v) => v.estado === 'ACTIVO')),
+      next: (res) => this.vehiculos.set((res ?? []).filter((v) => v.estado === 'ACTIVO')),
     });
   }
 

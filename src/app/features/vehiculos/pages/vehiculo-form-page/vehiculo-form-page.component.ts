@@ -153,13 +153,13 @@ export class VehiculoFormPageComponent implements OnInit {
 
   private loadClientes(): void {
     this.clientesService.findAll().subscribe({
-      next: (res) => this.clientes.set(res.data.filter((c) => c.estado === 'ACTIVO')),
+      next: (res) => this.clientes.set((res ?? []).filter((c) => c.estado === 'ACTIVO')),
     });
   }
 
   private loadMarcas(): void {
     this.vehiculosService.findAllMarcas().subscribe({
-      next: (res) => this.marcas.set(res.data),
+      next: (res) => this.marcas.set(res ?? []),
     });
   }
 
@@ -168,15 +168,14 @@ export class VehiculoFormPageComponent implements OnInit {
     this.modelos.set([]);
     if (marcaId) {
       this.vehiculosService.findModelosByMarca(marcaId).subscribe({
-        next: (res) => this.modelos.set(res.data),
+        next: (res) => this.modelos.set(res ?? []),
       });
     }
   }
 
   private loadVehiculo(id: string): void {
     this.vehiculosService.findById(id).subscribe({
-      next: (res) => {
-        const v = res.data;
+      next: (v) => {
         this.vehiculoForm.patchValue({
           clienteId: v.clienteId,
           marcaId: v.marcaId,

@@ -100,7 +100,7 @@ export class VehiculoListPageComponent implements OnInit {
     this.loading.set(true);
     this.vehiculosService.findAll().subscribe({
       next: (res) => {
-        this.vehiculos.set(res.data);
+        this.vehiculos.set(res ?? []);
         this.loading.set(false);
       },
       error: () => {

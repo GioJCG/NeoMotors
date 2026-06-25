@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { UserService } from './user.service';
-import { CompaniesService } from '../../features/companies/services/companies.service';
+import { ContextService } from './context.service';
 
 const DEFAULT_PRIMARY = '#1976d2';
 const DEFAULT_SECONDARY = '#ff5722';
@@ -9,7 +9,7 @@ const FALLBACK_BG = '#f5f5f5';
 @Injectable({ providedIn: 'root' })
 export class BrandingService {
   private readonly userService = inject(UserService);
-  private readonly companiesService = inject(CompaniesService);
+  private readonly contextService = inject(ContextService);
 
   init(): void {
     this.applyFromCurrentCompany();
@@ -26,9 +26,8 @@ export class BrandingService {
       return;
     }
 
-    this.companiesService.findById(companyId).subscribe({
-      next: (res) => {
-        const company = res;
+    this.contextService.findCompanyById(companyId).subscribe({
+      next: (company) => {
         this.applyBranding(
           company.colorPrimario || undefined,
           company.colorSecundario || undefined,

@@ -108,8 +108,7 @@ export class ClienteFormPageComponent implements OnInit {
 
   private loadCliente(id: string): void {
     this.clientesService.findById(id).subscribe({
-      next: (res) => {
-        const c = res.data;
+      next: (c) => {
         this.clienteForm.patchValue({
           nombre: c.nombre,
           rfc: c.rfc || '',

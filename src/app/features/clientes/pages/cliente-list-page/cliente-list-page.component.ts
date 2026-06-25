@@ -98,7 +98,7 @@ export class ClienteListPageComponent implements OnInit {
     this.loading.set(true);
     this.clientesService.findAll().subscribe({
       next: (res) => {
-        this.clientes.set(res.data);
+        this.clientes.set(res ?? []);
         this.loading.set(false);
       },
       error: () => {
