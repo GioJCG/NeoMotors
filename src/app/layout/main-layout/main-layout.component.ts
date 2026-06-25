@@ -74,21 +74,29 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
                 Empresas
               </a>
             }
-            @if (userService.currentCompanyId() && userService.hasAnyRole(['AdministradorEmpresa', 'SuperUsuario'])) {
+
+            @if (userService.currentCompanyId() && (userService.hasAnyRole(['AdministradorEmpresa', 'SuperUsuario']))) {
               <a routerLink="/users" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" (click)="toggleMenu()">
                 <mat-icon>group</mat-icon>
                 Usuarios
               </a>
             }
-            @if (userService.currentCompanyId()) {
+
+            @if (userService.currentCompanyId() && userService.hasAnyRole(['AdministradorEmpresa', 'SupervisorSucursal', 'SuperUsuario'])) {
               <a routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" (click)="toggleMenu()">
                 <mat-icon>dashboard</mat-icon>
                 Dashboard
               </a>
+            }
+
+            @if (userService.currentCompanyId() && userService.hasAnyRole(['AdministradorEmpresa', 'SuperUsuario'])) {
               <a [routerLink]="['/branches']" [queryParams]="{ empresaId: userService.currentCompanyId() }" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>store</mat-icon>
                 Sucursales
               </a>
+            }
+
+            @if (userService.currentCompanyId()) {
               <a routerLink="/customers" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>people</mat-icon>
                 Clientes
@@ -97,10 +105,16 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
                 <mat-icon>directions_car</mat-icon>
                 Vehículos
               </a>
+            }
+
+            @if (userService.currentCompanyId() && userService.hasAnyRole(['AdministradorEmpresa', 'SupervisorSucursal', 'SuperUsuario'])) {
               <a routerLink="/appointments" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>calendar_today</mat-icon>
                 Citas
               </a>
+            }
+
+            @if (userService.currentCompanyId()) {
               <a routerLink="/work-orders/reception" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>assignment_returned</mat-icon>
                 Recepción
@@ -113,6 +127,9 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
                 <mat-icon>request_quote</mat-icon>
                 Cotizaciones
               </a>
+            }
+
+            @if (userService.currentCompanyId() && userService.hasAnyRole(['AdministradorEmpresa', 'SupervisorSucursal', 'SuperUsuario'])) {
               <a routerLink="/suppliers" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>local_shipping</mat-icon>
                 Proveedores
@@ -129,17 +146,12 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
                 <mat-icon>inventory_2</mat-icon>
                 Inventario
               </a>
+            }
+
+            @if (userService.currentCompanyId()) {
               <a routerLink="/cash-desk" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>point_of_sale</mat-icon>
                 Caja
-              </a>
-              <a routerLink="/notifications" routerLinkActive="active-link" (click)="toggleMenu()">
-                <mat-icon>notifications</mat-icon>
-                Notificaciones
-              </a>
-              <a routerLink="/audit-logs" routerLinkActive="active-link" (click)="toggleMenu()">
-                <mat-icon>receipt_long</mat-icon>
-                Auditoría
               </a>
               <a routerLink="/billing" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>receipt_long</mat-icon>
@@ -148,6 +160,17 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
               <a routerLink="/fiscal/csd" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>verified</mat-icon>
                 CSD
+              </a>
+            }
+
+            @if (userService.currentCompanyId() && userService.hasAnyRole(['AdministradorEmpresa', 'SupervisorSucursal', 'SuperUsuario'])) {
+              <a routerLink="/notifications" routerLinkActive="active-link" (click)="toggleMenu()">
+                <mat-icon>notifications</mat-icon>
+                Notificaciones
+              </a>
+              <a routerLink="/audit-logs" routerLinkActive="active-link" (click)="toggleMenu()">
+                <mat-icon>receipt_long</mat-icon>
+                Auditoría
               </a>
             }
           </nav>

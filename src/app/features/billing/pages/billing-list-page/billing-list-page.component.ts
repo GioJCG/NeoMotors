@@ -158,7 +158,7 @@ export class BillingListPageComponent implements OnInit {
     if (!factura.uuid) return;
     this.billingService.download(factura.id, 'pdf').subscribe({
       next: (res) => {
-        const blob = new Blob([res.data.contenido], { type: 'text/html' });
+        const blob = this.base64ToBlob(res.data.contenido, 'application/pdf');
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -168,5 +168,20 @@ export class BillingListPageComponent implements OnInit {
       },
       error: () => this.snackBar.open('Error al descargar PDF', 'Cerrar', { duration: 3000 }),
     });
+  }
+
+  private base64ToBlob(base64: string, mimeType: string): Blob {
+    const byteChars = atob(base64);
+    const byteArrays: Uint8Array[] = [];
+    const sliceSize = 1024;
+    for (let offset = 0; offset < byteChars.length; offset += sliceSize) {
+      const slice = byteChars.slice(offset, offset + sliceSize);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      byteArrays.push(new Uint8Array(byteNumbers));
+    }
+    return new Blob(byteArrays, { type: mimeType });
   }
 }
