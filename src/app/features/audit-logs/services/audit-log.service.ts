@@ -1,8 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { AuditLogResponse } from '../models/audit-log.model';
+
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  timestamp: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuditLogService {
@@ -26,6 +33,6 @@ export class AuditLogService {
     if (filters.usuarioId) params.set('usuarioId', filters.usuarioId);
     if (filters.desde) params.set('desde', filters.desde);
     if (filters.hasta) params.set('hasta', filters.hasta);
-    return this.http.get<AuditLogResponse>(`${this.apiUrl}?${params}`);
+    return this.http.get<ApiResponse<AuditLogResponse>>(`${this.apiUrl}?${params}`).pipe(map((r) => r.data));
   }
 }

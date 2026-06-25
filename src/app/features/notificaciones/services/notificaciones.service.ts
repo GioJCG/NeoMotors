@@ -1,8 +1,15 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, interval, switchMap, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { Notificacion, NotificacionListResponse, UnreadCount } from '../models/notificacion.model';
+
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  timestamp: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class NotificacionesService {
@@ -32,7 +39,8 @@ export class NotificacionesService {
   }
 
   private loadNotifications(page = 1, limit = 10): Observable<NotificacionListResponse> {
-    return this.http.get<NotificacionListResponse>(`${this.apiUrl}?page=${page}&limit=${limit}&leida=false`).pipe(
+    return this.http.get<ApiResponse<NotificacionListResponse>>(`${this.apiUrl}?page=${page}&limit=${limit}&leida=false`).pipe(
+      map((r) => r.data),
       tap((res) => {
         this.notifications.set(res.data);
         this.total.set(res.total);
@@ -41,24 +49,27 @@ export class NotificacionesService {
   }
 
   private loadUnreadCount(): Observable<UnreadCount> {
-    return this.http.get<UnreadCount>(`${this.apiUrl}/unread-count`).pipe(
+    return this.http.get<ApiResponse<UnreadCount>>(`${this.apiUrl}/unread-count`).pipe(
+      map((r) => r.data),
       tap((res) => this.unreadCount.set(res.count)),
     );
   }
 
   getAll(page = 1, limit = 50, leida?: string): Observable<NotificacionListResponse> {
     const params = `page=${page}&limit=${limit}${leida !== undefined ? `&leida=${leida}` : ''}`;
-    return this.http.get<NotificacionListResponse>(`${this.apiUrl}?${params}`);
+    return this.http.get<ApiResponse<NotificacionListResponse>>(`${this.apiUrl}?${params}`).pipe(map((r) => r.data));
   }
 
   markAsRead(id: string): Observable<Notificacion> {
-    return this.http.put<Notificacion>(`${this.apiUrl}/${id}/read`, {}).pipe(
+    return this.http.put<ApiResponse<Notificacion>>(`${this.apiUrl}/${id}/read`, {}).pipe(
+      map((r) => r.data),
       tap(() => this.refresh()),
     );
   }
 
   markAllAsRead(): Observable<{ count: number }> {
-    return this.http.put<{ count: number }>(`${this.apiUrl}/read-all`, {}).pipe(
+    return this.http.put<ApiResponse<{ count: number }>>(`${this.apiUrl}/read-all`, {}).pipe(
+      map((r) => r.data),
       tap(() => this.refresh()),
     );
   }

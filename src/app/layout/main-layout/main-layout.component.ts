@@ -141,6 +141,10 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
                 <mat-icon>receipt_long</mat-icon>
                 Auditoría
               </a>
+              <a routerLink="/billing" routerLinkActive="active-link" (click)="toggleMenu()">
+                <mat-icon>receipt_long</mat-icon>
+                Facturación
+              </a>
               <a routerLink="/fiscal/csd" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>verified</mat-icon>
                 CSD
