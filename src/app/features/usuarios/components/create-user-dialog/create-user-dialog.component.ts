@@ -8,9 +8,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UsuariosService } from '../../services/usuarios.service';
-import { ContextService } from '../../../../core/services/context.service';
+import { BranchesService } from '../../../branches/services/branches.service';
 import { UserService } from '../../../../core/services/user.service';
-import { BranchItem } from '../../../../shared/models/user.model';
+import { Branch } from '../../../branches/models/branch.model';
 
 @Component({
   selector: 'app-create-user-dialog',
@@ -74,6 +74,9 @@ import { BranchItem } from '../../../../shared/models/user.model';
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Sucursal</mat-label>
           <mat-select formControlName="sucursalId">
+            @if (branches().length === 0) {
+              <mat-option value="" disabled>No hay sucursales activas disponibles</mat-option>
+            }
             @for (branch of branches(); track branch.id) {
               <mat-option [value]="branch.id">{{ branch.nombre }}</mat-option>
             }
@@ -126,10 +129,10 @@ export class CreateUserDialogComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly dialogRef = inject(MatDialogRef<CreateUserDialogComponent>);
   private readonly usuariosService = inject(UsuariosService);
-  private readonly contextService = inject(ContextService);
+  private readonly branchesService = inject(BranchesService);
   private readonly userService = inject(UserService);
 
-  readonly branches = signal<BranchItem[]>([]);
+  readonly branches = signal<Branch[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
@@ -148,7 +151,7 @@ export class CreateUserDialogComponent implements OnInit {
   ngOnInit(): void {
     const companyId = this.userService.currentCompanyId();
     if (companyId) {
-      this.contextService.getBranches(companyId).subscribe({
+      this.branchesService.findActiveByCompany(companyId).subscribe({
         next: (branches) => this.branches.set(branches),
       });
     }

@@ -15,6 +15,11 @@ export class BranchesService {
     return this.http.get<Branch[]>(this.apiUrl, { params });
   }
 
+  findActiveByCompany(empresaId: string): Observable<Branch[]> {
+    const params = new HttpParams().set('empresaId', empresaId).set('estado', 'ACTIVA');
+    return this.http.get<Branch[]>(this.apiUrl, { params });
+  }
+
   findById(id: string): Observable<Branch> {
     return this.http.get<Branch>(`${this.apiUrl}/${id}`);
   }
