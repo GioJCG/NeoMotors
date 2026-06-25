@@ -32,7 +32,14 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
           <mat-icon>menu</mat-icon>
         </button>
 
-        <span class="brand" routerLink="/">neoMotors</span>
+        <a class="brand" routerLink="/">
+          @if (brandingService.logoUrl(); as logo) {
+            <img [src]="logo" alt="Logo" class="brand-logo" />
+          } @else {
+            <mat-icon class="brand-icon">business</mat-icon>
+          }
+          <span class="brand-name">{{ brandingService.companyName() || userService.currentCompanyName() || 'Mi Empresa' }}</span>
+        </a>
 
         <span class="spacer"></span>
 
@@ -62,79 +69,79 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
         <div class="sidenav">
           <nav class="nav-list">
             @if (userService.hasRole('SuperUsuario')) {
-              <a mat-menu-item routerLink="/companies" (click)="toggleMenu()">
+              <a routerLink="/companies" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" (click)="toggleMenu()">
                 <mat-icon>business</mat-icon>
                 Empresas
               </a>
             }
             @if (userService.currentCompanyId() && userService.hasAnyRole(['AdministradorEmpresa', 'SuperUsuario'])) {
-              <a mat-menu-item routerLink="/users" (click)="toggleMenu()">
+              <a routerLink="/users" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" (click)="toggleMenu()">
                 <mat-icon>group</mat-icon>
                 Usuarios
               </a>
             }
             @if (userService.currentCompanyId()) {
-              <a mat-menu-item routerLink="/dashboard" (click)="toggleMenu()">
+              <a routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" (click)="toggleMenu()">
                 <mat-icon>dashboard</mat-icon>
                 Dashboard
               </a>
-              <a mat-menu-item [routerLink]="['/branches']" [queryParams]="{ empresaId: userService.currentCompanyId() }" (click)="toggleMenu()">
+              <a [routerLink]="['/branches']" [queryParams]="{ empresaId: userService.currentCompanyId() }" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>store</mat-icon>
                 Sucursales
               </a>
-              <a mat-menu-item routerLink="/customers" (click)="toggleMenu()">
+              <a routerLink="/customers" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>people</mat-icon>
                 Clientes
               </a>
-              <a mat-menu-item routerLink="/vehicles" (click)="toggleMenu()">
+              <a routerLink="/vehicles" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>directions_car</mat-icon>
                 Vehículos
               </a>
-              <a mat-menu-item routerLink="/appointments" (click)="toggleMenu()">
+              <a routerLink="/appointments" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>calendar_today</mat-icon>
                 Citas
               </a>
-              <a mat-menu-item routerLink="/work-orders/reception" (click)="toggleMenu()">
+              <a routerLink="/work-orders/reception" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>assignment_returned</mat-icon>
                 Recepción
               </a>
-              <a mat-menu-item routerLink="/work-orders" (click)="toggleMenu()">
+              <a routerLink="/work-orders" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>build</mat-icon>
                 Órdenes
               </a>
-              <a mat-menu-item routerLink="/quotes" (click)="toggleMenu()">
+              <a routerLink="/quotes" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>request_quote</mat-icon>
                 Cotizaciones
               </a>
-              <a mat-menu-item routerLink="/suppliers" (click)="toggleMenu()">
+              <a routerLink="/suppliers" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>local_shipping</mat-icon>
                 Proveedores
               </a>
-              <a mat-menu-item routerLink="/purchase-orders" (click)="toggleMenu()">
+              <a routerLink="/purchase-orders" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>shopping_cart</mat-icon>
                 Compras
               </a>
-              <a mat-menu-item routerLink="/parts" (click)="toggleMenu()">
+              <a routerLink="/parts" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>handyman</mat-icon>
                 Refacciones
               </a>
-              <a mat-menu-item routerLink="/inventory" (click)="toggleMenu()">
+              <a routerLink="/inventory" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>inventory_2</mat-icon>
                 Inventario
               </a>
-              <a mat-menu-item routerLink="/cash-desk" (click)="toggleMenu()">
+              <a routerLink="/cash-desk" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>point_of_sale</mat-icon>
                 Caja
               </a>
-              <a mat-menu-item routerLink="/notifications" (click)="toggleMenu()">
+              <a routerLink="/notifications" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>notifications</mat-icon>
                 Notificaciones
               </a>
-              <a mat-menu-item routerLink="/audit-logs" (click)="toggleMenu()">
+              <a routerLink="/audit-logs" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>receipt_long</mat-icon>
                 Auditoría
               </a>
-              <a mat-menu-item routerLink="/fiscal/csd" (click)="toggleMenu()">
+              <a routerLink="/fiscal/csd" routerLinkActive="active-link" (click)="toggleMenu()">
                 <mat-icon>verified</mat-icon>
                 CSD
               </a>
@@ -164,10 +171,33 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
     }
 
     .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: inherit;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .brand-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    .brand-name {
       font-weight: 600;
-      font-size: 20px;
-      cursor: pointer;
-      margin-right: 16px;
+      font-size: 16px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .spacer {
@@ -188,8 +218,8 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
       left: 0;
       width: 240px;
       height: calc(100vh - 64px);
-      background: var(--app-bg, #fff);
-      border-right: 1px solid #e0e0e0;
+      background: var(--brand-primary, #1976d2);
+      border-right: 1px solid rgba(0,0,0,0.12);
       z-index: 99;
       overflow-y: auto;
       padding: 8px 0;
@@ -206,12 +236,18 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
       gap: 12px;
       padding: 12px 16px;
       text-decoration: none;
-      color: #333;
+      color: rgba(255,255,255,0.87);
       font-size: 14px;
+      transition: background 0.2s;
     }
 
     .nav-list a:hover {
-      background: #f5f5f5;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .nav-list a.active-link {
+      background: var(--brand-secondary, #ff5722);
+      color: #fff;
     }
 
     .content {
@@ -228,7 +264,7 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
 export class MainLayoutComponent implements OnInit {
   readonly userService = inject(UserService);
   private readonly router = inject(Router);
-  private readonly brandingService = inject(BrandingService);
+  protected readonly brandingService = inject(BrandingService);
   private menuOpenValue = false;
 
   menuOpen = () => this.menuOpenValue;
