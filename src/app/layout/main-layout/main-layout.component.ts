@@ -171,10 +171,33 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
     }
 
     .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: inherit;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .brand-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    .brand-name {
       font-weight: 600;
-      font-size: 20px;
-      cursor: pointer;
-      margin-right: 16px;
+      font-size: 16px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .spacer {

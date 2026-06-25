@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { UserService } from './user.service';
 import { CompaniesService } from '../../features/companies/services/companies.service';
+import { environment } from '../../../environments/environment';
 
 const DEFAULT_PRIMARY = '#1976d2';
 const DEFAULT_SECONDARY = '#ff5722';
@@ -22,6 +23,13 @@ export class BrandingService {
 
   refresh(): void {
     this.applyFromCurrentCompany();
+  }
+
+  private resolveLogoUrl(url: string | undefined | null): string | null {
+    if (!url) return null;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    const base = environment.apiUrl.replace('/api/v1', '');
+    return `${base}${url}`;
   }
 
   private applyFromCurrentCompany(): void {
@@ -56,6 +64,12 @@ export class BrandingService {
 
     const p = primary || DEFAULT_PRIMARY;
     const s = secondary || DEFAULT_SECONDARY;
+    const resolvedLogo = this.resolveLogoUrl(logoUrl);
+
+    this.companyName.set(name || null);
+    this.logoUrl.set(resolvedLogo);
+    this.primaryColor.set(p);
+    this.secondaryColor.set(s);
 
     this.companyName.set(name || null);
     this.logoUrl.set(logoUrl || null);
@@ -68,6 +82,12 @@ export class BrandingService {
     root.style.setProperty('--brand-secondary-rgb', this.hexToRgb(s));
     root.style.setProperty('--brand-contrast', this.isLightColor(p) ? '#000' : '#fff');
 
+    if (resolvedLogo) {
+      root.style.setProperty('--brand-logo-url', `url(${resolvedLogo})`);
+      root.style.setProperty('--brand-logo', resolvedLogo);
+    } else {
+      root.style.removeProperty('--brand-logo-url');
+      root.style.removeProperty('--brand-logo');
     if (logoUrl) {
       root.style.setProperty('--brand-logo-url', `url(${logoUrl})`);
       root.style.setProperty('--brand-logo-image', logoUrl);
@@ -95,6 +115,7 @@ export class BrandingService {
     root.style.setProperty('--brand-secondary-rgb', this.hexToRgb(DEFAULT_SECONDARY));
     root.style.setProperty('--brand-contrast', '#fff');
     root.style.removeProperty('--brand-logo-url');
+    root.style.removeProperty('--brand-logo');
     root.style.removeProperty('--brand-logo-image');
     root.setAttribute('data-theme', 'light');
     root.style.setProperty('--app-bg', FALLBACK_BG);
