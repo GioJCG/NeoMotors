@@ -102,6 +102,11 @@ export const layoutRoutes: Routes = [
           import('../features/fiscal/fiscal.routes').then((r) => r.fiscalRoutes),
       },
       {
+        path: 'billing',
+        loadChildren: () =>
+          import('../features/billing/billing.routes').then((r) => r.billingRoutes),
+      },
+      {
         path: '',
         redirectTo: 'companies',
         pathMatch: 'full',
