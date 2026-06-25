@@ -43,9 +43,11 @@ export interface UpdateVehiculoRequest {
 export interface Marca {
   id: string;
   nombre: string;
+  estado: string;
 }
 
 export interface Modelo {
   id: string;
   nombre: string;
+  estado: string;
 }

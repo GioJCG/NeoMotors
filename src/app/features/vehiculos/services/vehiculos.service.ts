@@ -37,4 +37,14 @@ export class VehiculosService {
   findModelosByMarca(marcaId: string): Observable<Modelo[]> {
     return this.http.get<Modelo[]>(`${this.apiUrl}/catalog/marcas/${marcaId}/modelos`);
   }
+
+  getBrands(): Observable<Marca[]> {
+    return this.http.get<Marca[]>(`${this.apiUrl}/catalog/brands`);
+  }
+
+  getModelsByBrand(brandId: string): Observable<Modelo[]> {
+    return this.http.get<Modelo[]>(`${this.apiUrl}/catalog/models`, {
+      params: { brandId },
+    });
+  }
 }
