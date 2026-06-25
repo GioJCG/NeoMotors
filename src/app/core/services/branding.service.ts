@@ -28,7 +28,7 @@ export class BrandingService {
 
     this.companiesService.findById(companyId).subscribe({
       next: (res) => {
-        const company = res.data;
+        const company = res;
         this.applyBranding(
           company.colorPrimario || undefined,
           company.colorSecundario || undefined,

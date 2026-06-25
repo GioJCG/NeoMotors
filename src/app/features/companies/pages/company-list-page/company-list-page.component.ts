@@ -83,6 +83,7 @@ export class CompanyListPageComponent implements OnInit {
   ];
 
   readonly companies = signal<Company[]>([]);
+  private readonly allCompanies = signal<Company[]>([]);
   readonly loading = signal(false);
   readonly searchTerm = signal('');
   readonly totalItems = signal(0);
@@ -96,7 +97,9 @@ export class CompanyListPageComponent implements OnInit {
     this.loading.set(true);
     this.companiesService.findAll().subscribe({
       next: (res) => {
-        this.companies.set(res.data);
+        const data = res ?? [];
+        this.allCompanies.set(data);
+        this.companies.set(data);
         this.loading.set(false);
       },
       error: () => {
@@ -108,15 +111,18 @@ export class CompanyListPageComponent implements OnInit {
 
   onSearch(term: string): void {
     this.searchTerm.set(term);
-    this.companies.set(
-      this.companies().filter(
-        (c) =>
-          !term ||
-          c.nombre.toLowerCase().includes(term.toLowerCase()) ||
-          c.rfc.toLowerCase().includes(term.toLowerCase()) ||
-          c.razonSocial.toLowerCase().includes(term.toLowerCase()),
-      ),
-    );
+    if (!term) {
+      this.companies.set(this.allCompanies());
+    } else {
+      this.companies.set(
+        this.allCompanies().filter(
+          (c) =>
+            c.nombre.toLowerCase().includes(term.toLowerCase()) ||
+            c.rfc.toLowerCase().includes(term.toLowerCase()) ||
+            c.razonSocial.toLowerCase().includes(term.toLowerCase()),
+        ),
+      );
+    }
   }
 
   onPageChange(_event: any): void {
