@@ -13,7 +13,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatDividerModule } from '@angular/material/divider';
 import { CompaniesService } from '../../../companies/services/companies.service';
 import { UserService } from '../../../../core/services/user.service';
-import { Company } from '../../../companies/models/company.model';
 
 @Component({
   selector: 'app-create-company-page',
@@ -110,21 +109,66 @@ import { Company } from '../../../companies/models/company.model';
                 <mat-divider class="section-divider"></mat-divider>
                 <h3 class="section-title">Personalización (opcional)</h3>
 
-                <div class="form-grid">
-                  <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>URL del Logo</mat-label>
-                    <input matInput formControlName="logoUrl" placeholder="https://ejemplo.com/logo.png" />
-                  </mat-form-field>
+                <div class="customization-grid">
+                  <div class="color-picker-row full-width">
+                    <label class="color-label">Color Primario</label>
+                    <div class="color-input-wrapper">
+                      <div class="color-swatch" [style.background]="companyForm.get('colorPrimario')?.value || '#1976D2'" (click)="colorPrimaryInput.click()">
+                        <input #colorPrimaryInput type="color" [value]="companyForm.get('colorPrimario')?.value || '#1976D2'" (input)="onColorChange('colorPrimario', $event)" class="color-native-input" />
+                      </div>
+                      <mat-form-field appearance="outline" class="hex-field">
+                        <input matInput [value]="companyForm.get('colorPrimario')?.value || '#1976D2'" (input)="onHexChange('colorPrimario', $event)" placeholder="#HEX" maxlength="7" />
+                      </mat-form-field>
+                    </div>
+                  </div>
 
-                  <mat-form-field appearance="outline">
-                    <mat-label>Color Primario</mat-label>
-                    <input matInput formControlName="colorPrimario" placeholder="#1976D2" />
-                  </mat-form-field>
+                  <div class="color-picker-row full-width">
+                    <label class="color-label">Color Secundario</label>
+                    <div class="color-input-wrapper">
+                      <div class="color-swatch" [style.background]="companyForm.get('colorSecundario')?.value || '#4CAF50'" (click)="colorSecondaryInput.click()">
+                        <input #colorSecondaryInput type="color" [value]="companyForm.get('colorSecundario')?.value || '#4CAF50'" (input)="onColorChange('colorSecundario', $event)" class="color-native-input" />
+                      </div>
+                      <mat-form-field appearance="outline" class="hex-field">
+                        <input matInput [value]="companyForm.get('colorSecundario')?.value || '#4CAF50'" (input)="onHexChange('colorSecundario', $event)" placeholder="#HEX" maxlength="7" />
+                      </mat-form-field>
+                    </div>
+                  </div>
 
-                  <mat-form-field appearance="outline">
-                    <mat-label>Color Secundario</mat-label>
-                    <input matInput formControlName="colorSecundario" placeholder="#FF5722" />
-                  </mat-form-field>
+                  <div class="logo-section full-width">
+                    <label class="color-label">Logotipo</label>
+                    @if (logoPreview(); as preview) {
+                      <div class="logo-preview-container">
+                        <img [src]="preview" class="logo-preview-img" alt="Logo preview" />
+                        <div class="logo-info">
+                          <span class="file-name">{{ logoFile()?.name }}</span>
+                          <span class="file-size">{{ (logoFile()?.size ?? 0) / 1024 | number:'1.0-0' }} KB</span>
+                        </div>
+                        <div class="logo-actions">
+                          <button mat-stroked-button type="button" (click)="logoInput.click()">
+                            <mat-icon>sync</mat-icon>
+                            Cambiar
+                          </button>
+                          <button mat-stroked-button type="button" color="warn" (click)="removeLogo()">
+                            <mat-icon>delete</mat-icon>
+                            Eliminar
+                          </button>
+                        </div>
+                      </div>
+                    } @else {
+                      <div class="logo-upload-zone" (click)="logoInput.click()">
+                        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                        <span class="upload-text">Subir Logotipo</span>
+                        <span class="upload-hint">PNG, JPG, SVG o WEBP — Máx. 5 MB</span>
+                      </div>
+                    }
+                    <input #logoInput type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" (change)="onLogoSelected($event)" hidden />
+                    @if (logoError(); as err) {
+                      <div class="logo-error">
+                        <mat-icon color="warn">error</mat-icon>
+                        <span>{{ err }}</span>
+                      </div>
+                    }
+                  </div>
 
                   <mat-form-field appearance="outline">
                     <mat-label>Tema</mat-label>
@@ -199,12 +243,174 @@ import { Company } from '../../../companies/models/company.model';
       margin-top: 16px;
     }
 
+    .customization-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
     .full-width {
       grid-column: 1 / -1;
     }
 
     .section-divider { margin: 16px 0; }
     .section-title { font-size: 16px; font-weight: 500; color: #666; margin: 0 0 8px; }
+
+    .color-label {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .color-picker-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .color-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .color-swatch {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      transition: border-color 0.2s;
+    }
+
+    .color-swatch:hover {
+      border-color: #1976d2;
+    }
+
+    .color-native-input {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    .hex-field {
+      flex: 1;
+    }
+
+    .hex-field ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+
+    .hex-field ::ng-deep .mat-mdc-form-field-infix {
+      width: auto;
+      min-width: 100px;
+    }
+
+    .logo-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .logo-upload-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 32px 16px;
+      border: 2px dashed #c0c0c0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #fafafa;
+    }
+
+    .logo-upload-zone:hover {
+      border-color: #1976d2;
+      background: #e3f2fd;
+    }
+
+    .upload-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: #1976d2;
+    }
+
+    .upload-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .upload-hint {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .logo-preview-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      background: #fafafa;
+    }
+
+    .logo-preview-img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+    }
+
+    .logo-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-size {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .logo-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .logo-error {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #c62828;
+    }
 
     .step-actions {
       display: flex;
@@ -245,8 +451,14 @@ export class CreateCompanyPageComponent {
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly logoFile = signal<File | null>(null);
+  readonly logoPreview = signal<string | null>(null);
+  readonly logoError = signal<string | null>(null);
 
   readonly companyForm: FormGroup;
+
+  private readonly MAX_LOGO_SIZE = 5 * 1024 * 1024;
+  private readonly ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp'];
 
   constructor() {
     this.companyForm = this.fb.group({
@@ -255,11 +467,58 @@ export class CreateCompanyPageComponent {
       razonSocial: ['', Validators.required],
       codigoPostalFiscal: ['', [Validators.required, Validators.maxLength(5)]],
       regimenFiscal: ['', Validators.required],
-      logoUrl: [''],
-      colorPrimario: [''],
-      colorSecundario: [''],
-      tema: [''],
+      colorPrimario: ['#1976D2'],
+      colorSecundario: ['#4CAF50'],
+      tema: ['light'],
     });
+  }
+
+  onColorChange(field: string, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.companyForm.get(field)?.setValue(input.value);
+  }
+
+  onHexChange(field: string, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    if (value && !value.startsWith('#')) {
+      value = '#' + value;
+    }
+    if (/^#[0-9a-fA-F]{0,6}$/.test(value)) {
+      this.companyForm.get(field)?.setValue(value);
+    }
+  }
+
+  onLogoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.logoError.set(null);
+
+    if (!this.ALLOWED_TYPES.includes(file.type)) {
+      this.logoError.set('Formato no permitido. Use PNG, JPG, SVG o WEBP.');
+      return;
+    }
+
+    if (file.size > this.MAX_LOGO_SIZE) {
+      this.logoError.set('El archivo excede el tamaño máximo de 5 MB.');
+      return;
+    }
+
+    this.logoFile.set(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.logoPreview.set(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeLogo(): void {
+    this.logoFile.set(null);
+    this.logoPreview.set(null);
+    this.logoError.set(null);
   }
 
   onSubmit(): void {
@@ -268,19 +527,36 @@ export class CreateCompanyPageComponent {
     this.loading.set(true);
     this.error.set(null);
 
-    this.companiesService.create(this.companyForm.value).subscribe({
-      next: (res) => {
-        this.loading.set(false);
-        const companyId = res.id;
-        if (companyId) {
-          this.userService.setCurrentCompany(companyId, res.nombre);
-        }
-        this.router.navigate(['/']);
-      },
-      error: (err) => {
-        this.error.set(err.error?.message || 'Error al crear la empresa');
-        this.loading.set(false);
-      },
-    });
+    const values = this.companyForm.value;
+
+    const createCompany = (logoUrl?: string) => {
+      this.companiesService.create({ ...values, logoUrl }).subscribe({
+        next: (res: any) => {
+          this.loading.set(false);
+          const companyId = res?.id || res?.data?.id;
+          if (companyId) {
+            this.userService.setCurrentCompany(companyId, res.nombre);
+          }
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          this.error.set(err.error?.message || 'Error al crear la empresa');
+          this.loading.set(false);
+        },
+      });
+    };
+
+    if (this.logoFile()) {
+      this.companiesService.uploadLogo(this.logoFile()!).subscribe({
+        next: (res: any) => {
+          createCompany(res.url || res.logoUrl);
+        },
+        error: () => {
+          createCompany();
+        },
+      });
+    } else {
+      createCompany();
+    }
   }
 }
