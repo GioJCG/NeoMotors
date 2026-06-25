@@ -30,5 +30,6 @@ export interface BranchItem {
   id: string;
   nombre: string;
   esMatriz: boolean;
+  estado: string;
   activa: boolean;
 }

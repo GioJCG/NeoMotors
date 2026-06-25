@@ -58,7 +58,7 @@ import { ContextService } from '../../core/services/context.service';
                   <div class="option-item">
                     <mat-icon>store</mat-icon>
                     <span>{{ b.nombre }}</span>
-                    @if (b.activa) {
+                    @if (b.estado === 'ACTIVA') {
                       <mat-icon class="active-icon" [inline]="true">check_circle</mat-icon>
                     }
                   </div>
