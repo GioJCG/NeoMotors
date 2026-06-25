@@ -29,4 +29,10 @@ export class CompaniesService {
   remove(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
   }
+
+  uploadLogo(file: File): Observable<{ url: string }> {
+    const formData = new FormData();
+    formData.append('logo', file);
+    return this.http.post<{ url: string }>(`${this.apiUrl}/logo`, formData);
+  }
 }
