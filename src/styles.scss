@@ -73,6 +73,7 @@ mat-toolbar[color="primary"] {
 }
 
 /* ── Table headers ── */
+/* ── Branded table headers ── */
 .mat-mdc-header-row {
   background: var(--brand-primary, #1976d2);
 }
@@ -83,6 +84,7 @@ mat-toolbar[color="primary"] {
 }
 
 /* ── Paginator ── */
+/* ── Branded paginator ── */
 .mat-mdc-paginator {
   --mat-paginator-enabled-icon-color: var(--brand-primary, #1976d2);
   --mat-paginator-hover-icon-color: var(--brand-secondary, #ff5722);
@@ -90,12 +92,14 @@ mat-toolbar[color="primary"] {
 }
 
 /* ── MatChip ── */
+/* ── Branded chips (MAT M3) ── */
 .mat-mdc-chip {
   --mdc-chip-elevated-container-color: rgba(var(--brand-primary-rgb, 25, 118, 210), 0.12);
   --mdc-chip-label-text-color: var(--brand-primary, #1976d2);
 }
 
 /* ── MatCard icon avatars ── */
+/* ── Branded card headers / icon avatars ── */
 .mat-mdc-card .mat-mdc-card-header .mat-icon {
   color: var(--brand-primary, #1976d2);
 }
@@ -134,6 +138,7 @@ mat-toolbar[color="primary"] {
 }
 
 /* ── Dashboard bar fill ── */
+/* ── Dashboard bar-fill uses secondary brand color ── */
 .bar-fill {
   background: var(--brand-secondary, #ff5722) !important;
 }

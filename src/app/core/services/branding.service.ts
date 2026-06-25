@@ -71,6 +71,11 @@ export class BrandingService {
     this.primaryColor.set(p);
     this.secondaryColor.set(s);
 
+    this.companyName.set(name || null);
+    this.logoUrl.set(logoUrl || null);
+    this.primaryColor.set(p);
+    this.secondaryColor.set(s);
+
     root.style.setProperty('--brand-primary', p);
     root.style.setProperty('--brand-secondary', s);
     root.style.setProperty('--brand-primary-rgb', this.hexToRgb(p));
@@ -83,6 +88,12 @@ export class BrandingService {
     } else {
       root.style.removeProperty('--brand-logo-url');
       root.style.removeProperty('--brand-logo');
+    if (logoUrl) {
+      root.style.setProperty('--brand-logo-url', `url(${logoUrl})`);
+      root.style.setProperty('--brand-logo-image', logoUrl);
+    } else {
+      root.style.removeProperty('--brand-logo-url');
+      root.style.removeProperty('--brand-logo-image');
     }
 
     root.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
@@ -105,6 +116,7 @@ export class BrandingService {
     root.style.setProperty('--brand-contrast', '#fff');
     root.style.removeProperty('--brand-logo-url');
     root.style.removeProperty('--brand-logo');
+    root.style.removeProperty('--brand-logo-image');
     root.setAttribute('data-theme', 'light');
     root.style.setProperty('--app-bg', FALLBACK_BG);
   }

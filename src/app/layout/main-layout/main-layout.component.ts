@@ -212,6 +212,36 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
       margin-left: 8px;
     }
 
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .brand-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 16px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 240px;
+    }
+
     .sidenav {
       position: fixed;
       top: 64px;
