@@ -61,82 +61,15 @@ import { NotificationPanelComponent } from '../../features/notificaciones/compon
       @if (menuOpen()) {
         <div class="sidenav">
           <nav class="nav-list">
-            @if (userService.hasRole('SuperUsuario')) {
-              <a mat-menu-item routerLink="/companies" (click)="toggleMenu()">
-                <mat-icon>business</mat-icon>
-                Empresas
-              </a>
-            }
-            @if (userService.currentCompanyId() && userService.hasAnyRole(['AdministradorEmpresa', 'SuperUsuario'])) {
-              <a mat-menu-item routerLink="/users" (click)="toggleMenu()">
-                <mat-icon>group</mat-icon>
-                Usuarios
-              </a>
-            }
-            @if (userService.currentCompanyId()) {
-              <a mat-menu-item routerLink="/dashboard" (click)="toggleMenu()">
-                <mat-icon>dashboard</mat-icon>
-                Dashboard
-              </a>
-              <a mat-menu-item [routerLink]="['/branches']" [queryParams]="{ empresaId: userService.currentCompanyId() }" (click)="toggleMenu()">
-                <mat-icon>store</mat-icon>
-                Sucursales
-              </a>
-              <a mat-menu-item routerLink="/customers" (click)="toggleMenu()">
-                <mat-icon>people</mat-icon>
-                Clientes
-              </a>
-              <a mat-menu-item routerLink="/vehicles" (click)="toggleMenu()">
-                <mat-icon>directions_car</mat-icon>
-                Vehículos
-              </a>
-              <a mat-menu-item routerLink="/appointments" (click)="toggleMenu()">
-                <mat-icon>calendar_today</mat-icon>
-                Citas
-              </a>
-              <a mat-menu-item routerLink="/work-orders/reception" (click)="toggleMenu()">
-                <mat-icon>assignment_returned</mat-icon>
-                Recepción
-              </a>
-              <a mat-menu-item routerLink="/work-orders" (click)="toggleMenu()">
-                <mat-icon>build</mat-icon>
-                Órdenes
-              </a>
-              <a mat-menu-item routerLink="/quotes" (click)="toggleMenu()">
-                <mat-icon>request_quote</mat-icon>
-                Cotizaciones
-              </a>
-              <a mat-menu-item routerLink="/suppliers" (click)="toggleMenu()">
-                <mat-icon>local_shipping</mat-icon>
-                Proveedores
-              </a>
-              <a mat-menu-item routerLink="/purchase-orders" (click)="toggleMenu()">
-                <mat-icon>shopping_cart</mat-icon>
-                Compras
-              </a>
-              <a mat-menu-item routerLink="/parts" (click)="toggleMenu()">
-                <mat-icon>handyman</mat-icon>
-                Refacciones
-              </a>
-              <a mat-menu-item routerLink="/inventory" (click)="toggleMenu()">
-                <mat-icon>inventory_2</mat-icon>
-                Inventario
-              </a>
-              <a mat-menu-item routerLink="/cash-desk" (click)="toggleMenu()">
-                <mat-icon>point_of_sale</mat-icon>
-                Caja
-              </a>
-              <a mat-menu-item routerLink="/notifications" (click)="toggleMenu()">
-                <mat-icon>notifications</mat-icon>
-                Notificaciones
-              </a>
-              <a mat-menu-item routerLink="/audit-logs" (click)="toggleMenu()">
-                <mat-icon>receipt_long</mat-icon>
-                Auditoría
-              </a>
-              <a mat-menu-item routerLink="/fiscal/csd" (click)="toggleMenu()">
-                <mat-icon>verified</mat-icon>
-                CSD
+            @for (item of userService.menuItems(); track item.route) {
+              <a
+                mat-menu-item
+                [routerLink]="item.route"
+                [queryParams]="getMenuQueryParams(item)"
+                (click)="toggleMenu()"
+              >
+                <mat-icon>{{ item.icon }}</mat-icon>
+                {{ item.label }}
               </a>
             }
           </nav>
@@ -246,6 +179,14 @@ export class MainLayoutComponent implements OnInit {
 
   toggleMenu(): void {
     this.menuOpenValue = !this.menuOpenValue;
+  }
+
+  getMenuQueryParams(item: { route: string }): Record<string, string> | undefined {
+    if (item.route === '/branches') {
+      const id = this.userService.currentCompanyId();
+      return id ? { empresaId: id } : undefined;
+    }
+    return undefined;
   }
 
   logout(): void {

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../core/guards/auth.guard';
+import { roleGuard } from '../core/guards/role.guard';
 
 export const layoutRoutes: Routes = [
   {
@@ -20,11 +21,15 @@ export const layoutRoutes: Routes = [
         path: 'companies',
         loadChildren: () =>
           import('../features/companies/companies.routes').then((r) => r.companyRoutes),
+        canActivate: [roleGuard],
+        data: { roles: ['SuperUsuario'] },
       },
       {
         path: 'branches',
         loadChildren: () =>
           import('../features/branches/branches.routes').then((r) => r.branchRoutes),
+        canActivate: [roleGuard],
+        data: { roles: ['SuperUsuario', 'AdministradorEmpresa', 'SupervisorSucursal'] },
       },
       {
         path: 'customers',
@@ -55,21 +60,29 @@ export const layoutRoutes: Routes = [
         path: 'suppliers',
         loadChildren: () =>
           import('../features/suppliers/suppliers.routes').then((r) => r.supplierRoutes),
+        canActivate: [roleGuard],
+        data: { roles: ['SuperUsuario', 'AdministradorEmpresa', 'SupervisorSucursal', 'Consulta'] },
       },
       {
         path: 'purchase-orders',
         loadChildren: () =>
           import('../features/purchase-orders/purchase-orders.routes').then((r) => r.purchaseOrderRoutes),
+        canActivate: [roleGuard],
+        data: { roles: ['SuperUsuario', 'AdministradorEmpresa', 'SupervisorSucursal', 'Consulta'] },
       },
       {
         path: 'parts',
         loadChildren: () =>
           import('../features/parts/parts.routes').then((r) => r.partRoutes),
+        canActivate: [roleGuard],
+        data: { roles: ['SuperUsuario', 'AdministradorEmpresa', 'SupervisorSucursal', 'Consulta'] },
       },
       {
         path: 'inventory',
         loadChildren: () =>
           import('../features/inventory/inventory.routes').then((r) => r.inventoryRoutes),
+        canActivate: [roleGuard],
+        data: { roles: ['SuperUsuario', 'AdministradorEmpresa', 'SupervisorSucursal', 'Consulta'] },
       },
       {
         path: 'cash-desk',
@@ -85,6 +98,8 @@ export const layoutRoutes: Routes = [
         path: 'audit-logs',
         loadChildren: () =>
           import('../features/audit-logs/audit-logs.routes').then((r) => r.auditLogRoutes),
+        canActivate: [roleGuard],
+        data: { roles: ['SuperUsuario', 'AdministradorEmpresa'] },
       },
       {
         path: 'dashboard',
@@ -95,11 +110,15 @@ export const layoutRoutes: Routes = [
         path: 'users',
         loadChildren: () =>
           import('../features/usuarios/usuarios.routes').then((r) => r.usuarioRoutes),
+        canActivate: [roleGuard],
+        data: { roles: ['SuperUsuario', 'AdministradorEmpresa'] },
       },
       {
         path: 'fiscal',
         loadChildren: () =>
           import('../features/fiscal/fiscal.routes').then((r) => r.fiscalRoutes),
+        canActivate: [roleGuard],
+        data: { roles: ['SuperUsuario', 'AdministradorEmpresa'] },
       },
       {
         path: '',

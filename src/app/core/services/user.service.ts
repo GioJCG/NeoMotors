@@ -1,6 +1,14 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { TokenPayload, User, CompanyItem, BranchItem } from '../../shared/models/user.model';
 
+export interface MenuItem {
+  label: string;
+  icon: string;
+  route: string;
+  requiredRoles?: string[];
+  requiresCompany?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly userSignal = signal<User | null>(null);
@@ -37,6 +45,39 @@ export class UserService {
     if (!currentId) return null;
     const found = branches.find((b) => b.id === currentId);
     return found?.nombre || null;
+  });
+
+  readonly menuItems = computed<MenuItem[]>(() => {
+    const roles = this.rolesSignal();
+    const hasCompany = !!this.currentCompanyIdSignal();
+    const canAccess = (allowedRoles?: string[]) =>
+      !allowedRoles || allowedRoles.length === 0 || allowedRoles.some((r) => roles.includes(r));
+
+    const allItems: MenuItem[] = [
+      { label: 'Empresas', icon: 'business', route: '/companies', requiredRoles: ['SuperUsuario'] },
+      { label: 'Usuarios', icon: 'group', route: '/users', requiredRoles: ['SuperUsuario', 'AdministradorEmpresa'], requiresCompany: true },
+      { label: 'Dashboard', icon: 'dashboard', route: '/dashboard', requiresCompany: true },
+      { label: 'Sucursales', icon: 'store', route: '/branches', requiredRoles: ['SuperUsuario', 'AdministradorEmpresa', 'SupervisorSucursal'], requiresCompany: true },
+      { label: 'Clientes', icon: 'people', route: '/customers', requiresCompany: true },
+      { label: 'Vehículos', icon: 'directions_car', route: '/vehicles', requiresCompany: true },
+      { label: 'Citas', icon: 'calendar_today', route: '/appointments', requiresCompany: true },
+      { label: 'Recepción', icon: 'assignment_returned', route: '/work-orders/reception', requiresCompany: true },
+      { label: 'Órdenes', icon: 'build', route: '/work-orders', requiresCompany: true },
+      { label: 'Cotizaciones', icon: 'request_quote', route: '/quotes', requiresCompany: true },
+      { label: 'Proveedores', icon: 'local_shipping', route: '/suppliers', requiredRoles: ['SuperUsuario', 'AdministradorEmpresa', 'SupervisorSucursal', 'Consulta'], requiresCompany: true },
+      { label: 'Compras', icon: 'shopping_cart', route: '/purchase-orders', requiredRoles: ['SuperUsuario', 'AdministradorEmpresa', 'SupervisorSucursal', 'Consulta'], requiresCompany: true },
+      { label: 'Refacciones', icon: 'handyman', route: '/parts', requiredRoles: ['SuperUsuario', 'AdministradorEmpresa', 'SupervisorSucursal', 'Consulta'], requiresCompany: true },
+      { label: 'Inventario', icon: 'inventory_2', route: '/inventory', requiredRoles: ['SuperUsuario', 'AdministradorEmpresa', 'SupervisorSucursal', 'Consulta'], requiresCompany: true },
+      { label: 'Caja', icon: 'point_of_sale', route: '/cash-desk', requiresCompany: true },
+      { label: 'Notificaciones', icon: 'notifications', route: '/notifications', requiresCompany: true },
+      { label: 'Auditoría', icon: 'receipt_long', route: '/audit-logs', requiredRoles: ['SuperUsuario', 'AdministradorEmpresa'], requiresCompany: true },
+      { label: 'CSD', icon: 'verified', route: '/fiscal/csd', requiredRoles: ['SuperUsuario', 'AdministradorEmpresa'], requiresCompany: true },
+    ];
+
+    return allItems.filter((item) => {
+      if (item.requiresCompany && !hasCompany) return false;
+      return canAccess(item.requiredRoles);
+    });
   });
 
   constructor() {
