@@ -1,35 +1,15 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
-import { MatDividerModule } from '@angular/material/divider';
-import { CompaniesService } from '../../../companies/services/companies.service';
+import { CompanyFormComponent } from '../../../../shared/components/company-form/company-form.component';
 import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-create-company-page',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatStepperModule,
-    MatDividerModule,
-  ],
+  imports: [CommonModule, MatCardModule, MatStepperModule, CompanyFormComponent],
   template: `
     <div class="onboarding-container">
       <mat-card class="onboarding-card">
@@ -40,6 +20,12 @@ import { UserService } from '../../../../core/services/user.service';
 
         <mat-card-content>
           <mat-stepper linear #stepper>
+            <mat-step label="Datos de la empresa">
+              <app-company-form
+                mode="create"
+                cancelRoute="/auth/login"
+                (saved)="onCompanySaved($event)"
+              />
             <mat-step [stepControl]="companyForm" label="Datos de la empresa">
               <form [formGroup]="companyForm">
                 <div class="form-grid">
@@ -191,13 +177,6 @@ import { UserService } from '../../../../core/services/user.service';
               </form>
             </mat-step>
           </mat-stepper>
-
-          @if (error(); as err) {
-            <div class="error-message">
-              <mat-icon color="warn">error</mat-icon>
-              <span>{{ err }}</span>
-            </div>
-          }
         </mat-card-content>
       </mat-card>
     </div>
@@ -214,7 +193,7 @@ import { UserService } from '../../../../core/services/user.service';
     }
 
     .onboarding-card {
-      max-width: 640px;
+      max-width: 720px;
       width: 100%;
       padding: 32px;
       border-radius: 12px;
@@ -444,11 +423,15 @@ import { UserService } from '../../../../core/services/user.service';
   `,
 })
 export class CreateCompanyPageComponent {
-  private readonly fb = inject(FormBuilder);
-  private readonly companiesService = inject(CompaniesService);
   private readonly userService = inject(UserService);
   private readonly router = inject(Router);
 
+  onCompanySaved(res: any): void {
+    const companyId = res?.id || res?.data?.id;
+    if (companyId) {
+      this.userService.setCurrentCompany(companyId, res.nombre);
+    }
+    this.router.navigate(['/']);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly logoFile = signal<File | null>(null);
