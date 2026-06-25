@@ -53,6 +53,9 @@ import { Marca, Modelo } from '../../models/vehiculo.model';
         <mat-form-field appearance="outline" class="half-width">
           <mat-label>Marca</mat-label>
           <mat-select formControlName="marcaId" (selectionChange)="onMarcaChange($event.value)">
+            @if (marcas().length === 0) {
+              <mat-option value="" disabled>No hay marcas disponibles</mat-option>
+            }
             @for (m of marcas(); track m.id) {
               <mat-option [value]="m.id">{{ m.nombre }}</mat-option>
             }
@@ -65,6 +68,9 @@ import { Marca, Modelo } from '../../models/vehiculo.model';
         <mat-form-field appearance="outline" class="half-width">
           <mat-label>Modelo</mat-label>
           <mat-select formControlName="modeloId">
+            @if (modelos().length === 0) {
+              <mat-option value="" disabled>No hay modelos disponibles</mat-option>
+            }
             @for (m of modelos(); track m.id) {
               <mat-option [value]="m.id">{{ m.nombre }}</mat-option>
             }
@@ -160,6 +166,10 @@ export class VehiculoFormPageComponent implements OnInit {
   private loadMarcas(): void {
     this.vehiculosService.findAllMarcas().subscribe({
       next: (res) => this.marcas.set(res ?? []),
+      error: (err) => {
+        console.error('Error al cargar marcas:', err);
+        this.snackBar.open('Error al cargar marcas', 'Cerrar', { duration: 3000 });
+      },
     });
   }
 
@@ -169,6 +179,10 @@ export class VehiculoFormPageComponent implements OnInit {
     if (marcaId) {
       this.vehiculosService.findModelosByMarca(marcaId).subscribe({
         next: (res) => this.modelos.set(res ?? []),
+        error: (err) => {
+          console.error('Error al cargar modelos:', err);
+          this.snackBar.open('Error al cargar modelos', 'Cerrar', { duration: 3000 });
+        },
       });
     }
   }
